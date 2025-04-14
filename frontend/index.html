@@ -122,9 +122,9 @@
   <script>
     function cargarFormulario(tipo) {
       const urls = {
-        entrada: "/backend/FormularioEntrada.html", // Ruta del formulario de entrada
-        salida:  "/backend/FormularioSalida.html",  // Ruta del formulario de salida
-        consulta:"/backend/FormularioConsulta.html" // Ruta del formulario de consulta
+        entrada: "/backend/FormularioEntrada.html",  // Ruta del formulario de entrada en la carpeta public/backend
+        salida:  "/backend/FormularioSalida.html",    // Ruta del formulario de salida en la carpeta public/backend
+        consulta: "/backend/FormularioConsulta.html" // Ruta del formulario de consulta en la carpeta public/backend
       };
       document.getElementById('formularioFrame').src = urls[tipo];
     }
