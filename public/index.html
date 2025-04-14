@@ -120,14 +120,14 @@
   </div>
 
   <script>
-    function cargarFormulario(tipo) {
-      const urls = {
-  entrada: "/public/FormularioEntrada.html",
-  salida:  "/public/FormularioSalida.html",
-  consulta: "/public/FormularioConsulta.html"
-};
-      document.getElementById('formularioFrame').src = urls[tipo];
-    }
+function cargarFormulario(tipo) {
+  const urls = {
+    entrada: "backend/FormularioEntrada.html",
+    salida:  "backend/FormularioSalida.html",
+    consulta: "backend/FormularioConsulta.html"
+  };
+  document.getElementById('formularioFrame').src = urls[tipo];
+}
 
     function limpiarIframe() {
       document.getElementById('formularioFrame').src = "";
