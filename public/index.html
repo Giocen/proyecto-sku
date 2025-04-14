@@ -103,7 +103,7 @@
 <body>
 
   <div class="menu-container">
-    <img src="https://laeconomia.com.mx/wp-content/uploads/liverpool-face.png" alt="Logo de Liverpool" class="logo">
+    <img src="frontend/assets/liverpool-face.png" alt="Logo de Liverpool" class="logo">
     <h2>RYC Sku</h2>
 
     <div class="menu-buttons">
@@ -122,10 +122,10 @@
   <script>
     function cargarFormulario(tipo) {
       const urls = {
-        entrada: "/backend/FormularioEntrada.html",
-        salida:  "/backend/FormularioSalida.html",
-        consulta: "/backend/FormularioConsulta.html"
-      };
+  entrada: "/public/FormularioEntrada.html",
+  salida:  "/public/FormularioSalida.html",
+  consulta: "/public/FormularioConsulta.html"
+};
       document.getElementById('formularioFrame').src = urls[tipo];
     }
 
