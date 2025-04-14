@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -11,92 +12,128 @@
       padding: 0;
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding-top: 40px;
     }
 
     .menu-container {
       background-color: #fff;
-      padding: 40px;
+      padding: 30px;
       border-radius: 16px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      max-width: 500px;
+      max-width: 800px;
       width: 100%;
       box-sizing: border-box;
-      margin: 20px;
     }
 
     h2 {
       font-size: 32px;
-      color: #006747;  /* Verde de la bandera mexicana */
+      color: #006747;
       font-weight: bold;
       text-transform: uppercase;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       font-family: 'Helvetica', sans-serif;
-      letter-spacing: 2px;
+      text-align: center;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 20px;
+      width: 180px;
+    }
+
+    .menu-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
     .menu-item {
-      display: block;
-      padding: 18px;
-      margin: 12px 0;
+      padding: 14px 20px;
       background-color: #E4007F;
       color: white;
       text-decoration: none;
       border-radius: 8px;
-      font-size: 20px;
+      font-size: 16px;
       font-weight: 600;
       transition: background-color 0.3s, transform 0.2s ease-in-out;
-      width: 100%;
-      box-sizing: border-box;
+      cursor: pointer;
+      border: none;
     }
 
     .menu-item:hover {
       background-color: #c10067;
-      transform: translateY(-4px);
+      transform: translateY(-2px);
+    }
+
+    .iframe-container {
+      width: 100%;
+      height: 600px;
+      border: none;
+      border-radius: 8px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
     }
 
     .footer {
-      font-size: 12px;  /* Tamaño más pequeño */
+      font-size: 12px;
+      text-align: center;
       margin-top: 25px;
       color: #444;
-      font-weight: normal;  /* Sin negrita */
     }
 
-    .logo {
-      margin-bottom: 30px;
-      width: 180px;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
+    .inicio-button {
+      background-color: #006747;
+      color: white;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
     }
 
-    /* Estilos para pantallas pequeñas */
-    @media (max-width: 480px) {
-      .menu-container {
-        padding: 30px;
-        width: 90%;
-        max-width: none;
-      }
-
-      .menu-item {
-        font-size: 18px;
-        padding: 16px;
-      }
+    .inicio-button:hover {
+      background-color: #004f3a;
     }
   </style>
 </head>
 <body>
 
   <div class="menu-container">
-    <img src="https://i.imgur.com/KcdRkca.png" alt="Logo de Liverpool" class="logo">
+    <img src="assets/logo.png" alt="Logo de Liverpool" class="logo">
     <h2>RYC Sku</h2>
-    <a href="https://script.google.com/a/macros/liverpool.com.mx/s/AKfycby8Ak8tOnA0gqZEs5GgesHw2zQEuhIAFPboxiIx4YC50dCnApZhUiR-oCOb1g_FTQeNOg/exec?page=entrada" target="_blank" class="menu-item">Ingreso de Sku</a>
-    <a href="https://script.google.com/a/macros/liverpool.com.mx/s/AKfycby8Ak8tOnA0gqZEs5GgesHw2zQEuhIAFPboxiIx4YC50dCnApZhUiR-oCOb1g_FTQeNOg/exec?page=salida" target="_blank" class="menu-item">Salida de Sku</a>
-    <a href="https://script.google.com/a/macros/liverpool.com.mx/s/AKfycby8Ak8tOnA0gqZEs5GgesHw2zQEuhIAFPboxiIx4YC50dCnApZhUiR-oCOb1g_FTQeNOg/exec?page=consulta" target="_blank" class="menu-item">Consulta de Sku</a>
+
+    <div class="menu-buttons">
+      <button class="menu-item" onclick="cargarFormulario('entrada')">Ingreso de Sku</button>
+      <button class="menu-item" onclick="cargarFormulario('salida')">Salida de Sku</button>
+      <button class="menu-item" onclick="cargarFormulario('consulta')">Consulta de Sku</button>
+    </div>
+
+    <iframe id="formularioFrame" class="iframe-container"></iframe>
+
+    <button class="inicio-button" onclick="limpiarIframe()">Inicio</button>
+
     <div class="footer">By: Argeo Cen</div>
   </div>
+
+  <script>
+    function cargarFormulario(tipo) {
+      const urls = {
+        entrada: "https://script.google.com/a/macros/liverpool.com.mx/s/AKfycby8Ak8tOnA0gqZEs5GgesHw2zQEuhIAFPboxiIx4YC50dCnApZhUiR-oCOb1g_FTQeNOg/exec?page=entrada",
+        salida:  "https://script.google.com/a/macros/liverpool.com.mx/s/AKfycby8Ak8tOnA0gqZEs5GgesHw2zQEuhIAFPboxiIx4YC50dCnApZhUiR-oCOb1g_FTQeNOg/exec?page=salida",
+        consulta:"https://script.google.com/a/macros/liverpool.com.mx/s/AKfycby8Ak8tOnA0gqZEs5GgesHw2zQEuhIAFPboxiIx4YC50dCnApZhUiR-oCOb1g_FTQeNOg/exec?page=consulta"
+      };
+      document.getElementById('formularioFrame').src = urls[tipo];
+    }
+
+    function limpiarIframe() {
+      // Aquí puedes limpiar el iframe poniendo una página de inicio o simplemente vaciar el src
+      document.getElementById('formularioFrame').src = "";
+    }
+  </script>
 
 </body>
 </html>
