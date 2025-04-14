@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consulta de SKU</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .borde-verde {
+      border: 4px solid #22c55e; /* Color verde cuando el SKU es detectado */
+      transition: border 0.3s ease;
+    }
+    .borde-error {
+      border: 4px solid #f87171; /* Color rojo en caso de error */
+      transition: border 0.3s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 p-4">
+  <div class="max-w-md mx-auto bg-white shadow-xl rounded-2xl p-6 space-y-4 border border-pink-300">
+    <img src="https://i.imgur.com/n66e0SR.png"
+         alt="Liverpool Logo"
+         class="w-40 mx-auto mb-4">
+
+    <h2 class="text-xl font-bold text-center text-pink-600">Consulta de SKU</h2>
+
+    <label class="block text-sm font-medium text-gray-700">SKU</label>
+    <input id="sku" type="text" maxlength="15"
+           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400"
+           placeholder="Escanea o escribe SKU">
+
+    <div id="scanner-container" class="hidden rounded-lg overflow-hidden transition-all duration-300">
+      <div id="qr-reader" style="width: 100%;"></div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <button onclick="consultarSku()" id="btnConsultar"
+              class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 rounded-lg transition-all">
+        🔍 Consultar SKU
+      </button>
+
+      <button onclick="iniciarScanner()" id="btnToggleScanner"
+              class="bg-gray-100 hover:bg-gray-200 text-pink-700 font-semibold py-2 rounded-lg transition-all border border-pink-400">
+        📷 Escanear código de barras
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let html5QrCode;
+    let escaneando = false;
+
+    // Función para iniciar o detener el escáner
+    function iniciarScanner() {
+      const scannerContainer = document.getElementById("scanner-container");
+      const botonScanner = document.getElementById("btnToggleScanner");
+
+      if (escaneando) {
+        // Detener el escáner si ya está en ejecución
+        detenerScanner();
+        botonScanner.innerText = "📷 Escanear código de barras";
+        escaneando = false;
+        return;
+      }
+
+      escaneando = true;
+      botonScanner.innerText = "🛑 Detener escaneo";
+      scannerContainer.classList.remove("hidden");
+      scannerContainer.classList.remove("borde-verde", "borde-error");
+
+      // Crear nuevo escáner y configurar
+      html5QrCode = new Html5Qrcode("qr-reader");
+
+      const config = {
+        fps: 10, // 10 frames per second
+        qrbox: { width: 250, height: 250 } // Definir el tamaño del área de escaneo
+      };
+
+      html5QrCode.start(
+        { facingMode: "environment" },
+        config,
+        onScanSuccess,
+        onScanFailure
+      ).catch(err => {
+        console.error("Error iniciando cámara:", err);
+        alert("No se pudo iniciar la cámara. Verifica permisos y conexión HTTPS.");
+        escaneando = false;
+        botonScanner.innerText = "📷 Escanear código de barras";
+      });
+    }
+
+    // Callback al escanear un código con éxito
+    function onScanSuccess(decodedText, decodedResult) {
+      console.log(`Código detectado: ${decodedText}`);
+      document.getElementById("sku").value = decodedText;
+      document.getElementById("sku").classList.add("borde-verde");
+
+      // Limpia el borde después de 1 segundo
+      setTimeout(() => {
+        document.getElementById("sku").classList.remove("borde-verde");
+      }, 1000);
+
+      detenerScanner();  // Detenemos el escáner después de detectar un código
+      document.getElementById("btnToggleScanner").innerText = "📷 Escanear código de barras";
+      escaneando = false;
+
+      consultarSku(); // Consultamos el SKU detectado
+    }
+
+    // Callback cuando el escáner no logra detectar un código
+    function onScanFailure(error) {
+      console.warn(`Error de escaneo: ${error}`);
+    }
+
+    // Función para detener el escáner
+    function detenerScanner() {
+      if (html5QrCode) {
+        html5QrCode.stop().then(() => {
+          html5QrCode.clear().then(() => {
+            console.log("Escáner detenido correctamente.");
+            document.getElementById("scanner-container").classList.add("hidden");
+          }).catch(err => {
+            console.error("Error al limpiar el escáner al detenerlo:", err);
+          });
+        }).catch(err => {
+          console.error("Error al detener el escáner:", err);
+        });
+      }
+    }
+
+    // Función para consultar el SKU en el sistema
+    function consultarSku() {
+      var sku = document.getElementById("sku").value;
+      var btnConsultar = document.getElementById("btnConsultar");
+
+      if (!sku) {
+        mostrarError("Por favor, ingrese un SKU.");
+        document.getElementById("sku").classList.add("borde-error");
+        return;
+      }
+
+      if (!/^[A-Z0-9]{1,15}$/.test(sku)) {
+        mostrarError("El SKU debe ser alfanumérico y de hasta 15 caracteres.");
+        document.getElementById("sku").classList.add("borde-error");
+        return;
+      }
+
+      document.getElementById("sku").classList.remove("borde-error");
+      mostrarCargando("Buscando información...");
+
+      btnConsultar.disabled = true;
+      btnConsultar.classList.add("opacity-50", "cursor-not-allowed");
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          mostrarResultado(result);
+          btnConsultar.disabled = false;
+          btnConsultar.classList.remove("opacity-50", "cursor-not-allowed");
+        })
+        .withFailureHandler(function(error) {
+          mostrarError("Hubo un problema al consultar el SKU.");
+          btnConsultar.disabled = false;
+          btnConsultar.classList.remove("opacity-50", "cursor-not-allowed");
+        })
+        .consultarSku(sku);
+    }
+
+    // Función para mostrar mensaje de error
+    function mostrarError(message) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: message,
+        confirmButtonText: 'OK'
+      });
+    }
+
+    // Función para mostrar mensaje de cargando
+    function mostrarCargando(message) {
+      Swal.fire({
+        title: message,
+        didOpen: () => Swal.showLoading(),
+        allowOutsideClick: false
+      });
+    }
+
+    // Función para mostrar el resultado de la consulta
+    function mostrarResultado(result) {
+      if (result) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Resultado encontrado',
+          html: `
+            <div><strong></strong><br>${result.descripcion}</div>
+            <div><strong>No. de Sección:</strong> ${result.numero}</div>
+            <div><strong>Sección:</strong> ${result.seccion}</div>
+            <div><strong>Cantidad:</strong> ${result.cantidad}</div>
+            <div><strong>Ubicación:</strong><br>${result.ubicacion}</div>
+          `,
+          confirmButtonText: 'OK'
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'No encontrado',
+          text: 'No se encontró el SKU o no tiene ubicaciones registradas.',
+          confirmButtonText: 'OK'
+        });
+      }
+    }
+
+    window.onload = function () {
+      const inputSku = document.getElementById("sku");
+      inputSku.focus();
+
+      inputSku.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          consultarSku();
+        }
+      });
+    };
+  </script>
+</body>
+</html>
