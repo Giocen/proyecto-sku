@@ -71,10 +71,10 @@
 
     .iframe-container {
       width: 100%;
-      height: 600px;
       border: none;
       border-radius: 8px;
       box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+      transition: height 0.3s ease;
     }
 
     .footer {
@@ -98,6 +98,18 @@
     .inicio-button:hover {
       background-color: #004f3a;
     }
+
+    .iframe-entrada {
+      height: 800px; /* Ajuste para formulario de entrada */
+    }
+
+    .iframe-salida {
+      height: 600px; /* Ajuste para formulario de salida */
+    }
+
+    .iframe-consulta {
+      height: 500px; /* Ajuste para formulario de consulta */
+    }
   </style>
 </head>
 <body>
@@ -120,17 +132,30 @@
   </div>
 
   <script>
-function cargarFormulario(tipo) {
-  const urls = {
-    entrada: "backend/FormularioEntrada.html",
-    salida:  "backend/FormularioSalida.html",
-    consulta: "backend/FormularioConsulta.html"
-  };
-  document.getElementById('formularioFrame').src = urls[tipo];
-}
+    function cargarFormulario(tipo) {
+      const urls = {
+        entrada: "backend/FormularioEntrada.html",
+        salida:  "backend/FormularioSalida.html",
+        consulta: "backend/FormularioConsulta.html"
+      };
+      const iframe = document.getElementById('formularioFrame');
+      iframe.src = urls[tipo];
+
+      // Cambiar la clase de acuerdo al tipo de formulario cargado
+      iframe.classList.remove('iframe-entrada', 'iframe-salida', 'iframe-consulta');
+      if (tipo === 'entrada') {
+        iframe.classList.add('iframe-entrada');
+      } else if (tipo === 'salida') {
+        iframe.classList.add('iframe-salida');
+      } else if (tipo === 'consulta') {
+        iframe.classList.add('iframe-consulta');
+      }
+    }
 
     function limpiarIframe() {
-      document.getElementById('formularioFrame').src = "";
+      const iframe = document.getElementById('formularioFrame');
+      iframe.src = "";
+      iframe.classList.remove('iframe-entrada', 'iframe-salida', 'iframe-consulta');
     }
   </script>
 
