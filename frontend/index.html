@@ -122,15 +122,15 @@
   <script>
     function cargarFormulario(tipo) {
       const urls = {
-        entrada: "https://script.google.com/a/macros/liverpool.com.mx/s/AKfycby8Ak8tOnA0gqZEs5GgesHw2zQEuhIAFPboxiIx4YC50dCnApZhUiR-oCOb1g_FTQeNOg/exec?page=entrada",
-        salida:  "https://script.google.com/a/macros/liverpool.com.mx/s/AKfycby8Ak8tOnA0gqZEs5GgesHw2zQEuhIAFPboxiIx4YC50dCnApZhUiR-oCOb1g_FTQeNOg/exec?page=salida",
-        consulta:"https://script.google.com/a/macros/liverpool.com.mx/s/AKfycby8Ak8tOnA0gqZEs5GgesHw2zQEuhIAFPboxiIx4YC50dCnApZhUiR-oCOb1g_FTQeNOg/exec?page=consulta"
+        entrada: "/backend/FormularioEntrada.html", // Ruta del formulario de entrada
+        salida:  "/backend/FormularioSalida.html",  // Ruta del formulario de salida
+        consulta:"/backend/FormularioConsulta.html" // Ruta del formulario de consulta
       };
       document.getElementById('formularioFrame').src = urls[tipo];
     }
 
     function limpiarIframe() {
-      // Aquí puedes limpiar el iframe poniendo una página de inicio o simplemente vaciar el src
+      // Limpiar el iframe (vaciando la fuente)
       document.getElementById('formularioFrame').src = "";
     }
   </script>
