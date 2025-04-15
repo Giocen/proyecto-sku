@@ -1,221 +1,75 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Menú de Gestión de SKU</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f4f4f9;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      flex-direction: column;
-      transition: all 0.3s ease;
-    }
-
-    /* Contenedor del menú */
-    .menu-container {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      max-width: 700px;
-      width: 100%;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: all 0.3s ease;
-      text-align: center;
-    }
-
-    /* Contenedor oculto del formulario (300x518) */
-    .formulario-container {
-      display: none;
-      width: 300px;
-      height: 518px;
-      border: none;
-      border-radius: 8px;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-      background-color: #fff;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      transition: all 0.3s ease;
-    }
-
-    /* Botones del menú */
-    .menu-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .menu-item {
-      padding: 10px 16px;
-      background-color: #E4007F;
-      color: white;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      display: flex;
-      align-items: center;
-    }
-
-    .menu-item i {
-      margin-right: 6px;
-      font-size: 14px;
-    }
-
-    .menu-item:hover {
-      background-color: #c10067;
-    }
-
-    /* Estilo para el botón de inicio */
-    .inicio-button {
-      background-color: #006747;
-      color: white;
-      padding: 10px 16px;
-      font-size: 14px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      display: block;
-      margin: 20px auto 10px;
-    }
-
-    .inicio-button:hover {
-      background-color: #004f3a;
-    }
-
-    /* Estilo para el botón de menú dentro del formulario */
-    .menu-button {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background-color: #E4007F;
-      color: white;
-      border-radius: 50%;
-      padding: 10px;
-      border: none;
-      cursor: pointer;
-      z-index: 100;
-      font-size: 18px;
-    }
-
-    .menu-button:hover {
-      background-color: #c10067;
-    }
-
-    /* Responsividad */
-    @media (max-width: 600px) {
-      .menu-container {
-        width: 100%;
-        padding: 16px;
-      }
-
-      .menu-buttons {
-        flex-direction: column;
-      }
-
-      .menu-item {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de SKU - RYC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
+<body class="bg-gray-100 font-sans">
 
-  <!-- Contenedor del menú -->
-  <div id="menuContainer" class="menu-container">
-    <img src="/frontend/assets/liverpool-face.png" alt="Logo de Liverpool" class="logo">
-    <h2>RYC Sku</h2>
+  <div class="flex h-screen">
 
-    <div class="menu-buttons">
-      <button class="menu-item" onclick="cargarFormulario('entrada')">
-        ✅ Ingreso
-      </button>
-      <button class="menu-item" onclick="cargarFormulario('salida')">
-        📤 Salida
-      </button>
-      <button class="menu-item" onclick="cargarFormulario('consulta')">
-        🔍 Consulta
-      </button>
-    </div>
+    <!-- Menú lateral -->
+    <aside class="w-64 bg-white shadow-lg flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-center h-20 border-b">
+          <img src="/frontend/assets/liverpool-face.png" alt="Logo" class="h-10" />
+        </div>
+
+        <nav class="flex flex-col p-4 gap-2">
+          <button onclick="cargarFormulario('entrada')" class="text-left px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition">
+            ✅ Ingreso
+          </button>
+          <button onclick="cargarFormulario('salida')" class="text-left px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition">
+            📤 Salida
+          </button>
+          <button onclick="cargarFormulario('consulta')" class="text-left px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition">
+            🔍 Consulta
+          </button>
+          <button onclick="limpiarIframe()" class="text-left mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+            🏠 Inicio
+          </button>
+        </nav>
+      </div>
+
+      <div class="p-4 text-center text-xs text-gray-400">
+        By: Argeo Cen
+      </div>
+    </aside>
+
+    <!-- Contenedor del iframe -->
+    <main class="flex-1 flex flex-col items-center justify-center relative">
+      <iframe id="formularioFrame" class="w-full h-full hidden border-none transition duration-300 ease-in-out" src=""></iframe>
+      <div id="inicioTexto" class="text-center text-gray-500">
+        <h1 class="text-3xl font-semibold mb-4">Bienvenido a RYC Sku</h1>
+        <p>Selecciona una opción del menú lateral para comenzar.</p>
+      </div>
+    </main>
   </div>
-
-  <!-- Contenedor del formulario (oculto inicialmente) -->
-  <div id="formularioContainer" class="formulario-container">
-    <!-- Botón de menú en el formulario -->
-    <button class="menu-button" onclick="regresarAlMenu()">☰</button>
-
-    <iframe id="formularioFrame" class="iframe-container" src="" scrolling="no"></iframe>
-  </div>
-
-  <!-- Botón de inicio -->
-  <button class="inicio-button" onclick="limpiarIframe()">
-    🏠 Inicio
-  </button>
-
-  <div class="footer">By: Argeo Cen</div>
 
   <script>
-    // Función para cargar el formulario
     function cargarFormulario(tipo) {
       const urls = {
         entrada: "backend/FormularioEntrada.html",
-        salida:  "backend/FormularioSalida.html",
+        salida: "backend/FormularioSalida.html",
         consulta: "backend/FormularioConsulta.html"
       };
       const iframe = document.getElementById('formularioFrame');
-      const menu = document.getElementById('menuContainer');
-      const formularioContainer = document.getElementById('formularioContainer');
+      const inicioTexto = document.getElementById('inicioTexto');
 
-      // Mostrar el contenedor del formulario y ocultar el menú
-      formularioContainer.style.display = 'block';
-      menu.style.display = 'none';
-
-      iframe.style.opacity = 0;
-      setTimeout(() => {
-        iframe.src = urls[tipo];
-        iframe.style.height = "400px";
-        iframe.style.opacity = 1;
-      }, 200);
+      iframe.src = urls[tipo];
+      iframe.classList.remove('hidden');
+      inicioTexto.style.display = 'none';
     }
 
-    // Función para limpiar el iframe y regresar al menú
     function limpiarIframe() {
       const iframe = document.getElementById('formularioFrame');
-      const formularioContainer = document.getElementById('formularioContainer');
-      const menu = document.getElementById('menuContainer');
-
-      iframe.src = "";
-      iframe.style.height = "0px";
-      
-      // Ocultar el formulario y mostrar el menú
-      formularioContainer.style.display = 'none';
-      menu.style.display = 'block';
-    }
-
-    // Función para regresar al menú desde el formulario
-    function regresarAlMenu() {
-      // Regresar al menú principal sin recargar
-      document.getElementById('formularioContainer').style.display = 'none';
-      document.getElementById('menuContainer').style.display = 'block';
+      iframe.src = '';
+      iframe.classList.add('hidden');
+      document.getElementById('inicioTexto').style.display = 'block';
     }
   </script>
-
 </body>
 </html>
