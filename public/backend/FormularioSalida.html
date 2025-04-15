@@ -26,20 +26,10 @@
 </head>
 <body class="bg-gradient-to-r from-pink-100 to-purple-200 min-h-screen flex items-center justify-center">
 
-<!-- Menú superior -->
-<div class="bg-white shadow-md w-full p-4 fixed top-0 left-0 z-10">
-  <div class="flex justify-between items-center">
-    <span class="text-xl font-semibold text-pink-800">Salida Sku</span>
-    <div class="flex space-x-4">
-      <button onclick="regresarAlMenu()" class="text-sm text-pink-700 hover:underline">🏠 Inicio</button>
-      
-  </div>
-    </div>
-  </div>
-</div>
+  <!-- Agregar el sonido de beep -->
+  <audio id="beep-sound" src="beep-sound.mp3" preload="auto"></audio>
 
-  <!-- Contenido Principal -->
-  <div class="bg-white shadow-2xl rounded-2xl p-6 w-full max-w-md mt-8">
+  <div class="bg-white shadow-2xl rounded-2xl p-6 w-full max-w-md">
     <div class="flex items-center justify-center mb-6">
       <img src="https://i.imgur.com/n66e0SR.png" alt="Logo Liverpool" class="h-10 mr-2">
       <h3 class="text-2xl font-extrabold text-pink-800 text-center">Salida SKU</h3>
@@ -73,10 +63,10 @@
       📷 Escanear código de barras
     </button>
 
-    <div id="scanner-container" class="hidden rounded-lg overflow-hidden transition-all duration-300">
+  <div id="scanner-container" class="hidden rounded-lg overflow-hidden transition-all duration-300">
       <div id="qr-reader" style="width: 100%;"></div>
     </div>
-  </div>
+
 
   <script>
     let html5QrCode;
@@ -232,15 +222,15 @@
         cantidadInput.value = "";
       }
     }
-    
-   
-    function ajustarAltura() {
-      const altura = document.body.scrollHeight;
-      parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
-    }
 
-    window.onload = ajustarAltura;
-    window.onresize = ajustarAltura;
+    function ajustarAltura() {
+    const altura = document.body.scrollHeight;
+    parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
+  }
+
+     window.onload = ajustarAltura;
+     window.onresize = ajustarAltura;
+
   </script>
 </body>
 </html>

@@ -3,147 +3,234 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Consulta Sku</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <title>Consulta de SKU</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      background-color: #f3f4f6;
+    .borde-verde {
+      border: 4px solid #22c55e; /* Color verde cuando el SKU es detectado */
+      transition: border 0.3s ease;
     }
-    .menu {
-      position: fixed;
-      top: 0;
-      left: -250px;
-      width: 250px;
-      height: 100%;
-      background-color: #fff;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-      transition: left 0.3s ease;
-      z-index: 1000;
-      padding: 1rem;
-    }
-    .menu.open {
-      left: 0;
-    }
-    .menu ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    .menu li {
-      margin: 1rem 0;
-    }
-    .menu a {
-      text-decoration: none;
-      font-weight: bold;
-      color: #e6007e;
-    }
-    .content {
-      padding: 2rem;
-    }
-    .content-section {
-      display: none;
-    }
-    .content-section.active {
-      display: block;
+    .borde-error {
+      border: 4px solid #f87171; /* Color rojo en caso de error */
+      transition: border 0.3s ease;
     }
   </style>
 </head>
-<body>
-  <!-- Menú lateral -->
-  <div id="menu" class="menu">
-    <ul>
-      <li><a href="#" onclick="cambiarVista('inicio')">🏠 Inicio</a></li>
-      <li><a href="#" onclick="cambiarVista('entrada')">📦 Entrada</a></li>
-      <li><a href="#" onclick="cambiarVista('salida')">🚚 Salida</a></li>
-      <li><a href="#" onclick="cambiarVista('consulta')">🔍 Consulta</a></li>
-    </ul>
-  </div>
+<body class="bg-gray-50 text-gray-800 p-4">
+  <div class="max-w-md mx-auto bg-white shadow-xl rounded-2xl p-6 space-y-4 border border-pink-300">
+    <img src="https://i.imgur.com/n66e0SR.png"
+         alt="Liverpool Logo"
+         class="w-40 mx-auto mb-4">
 
-  <div class="min-h-screen flex items-center justify-center">
-    <div class="max-w-md mx-auto bg-white shadow-xl rounded-2xl p-6 space-y-4 border border-pink-300 mt-20">
-      <!-- Botón de menú dentro del formulario -->
-      <div class="flex justify-end">
-        <button onclick="toggleMenu()" class="text-2xl text-pink-800 font-bold focus:outline-none">☰</button>
-      </div>
+    <h2 class="text-xl font-bold text-center text-pink-600">Consulta de SKU</h2>
 
-      <!-- Logo -->
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Liverpool_logo.svg/2560px-Liverpool_logo.svg.png" alt="Liverpool Logo" class="w-32 mx-auto mb-2" />
+    <label class="block text-sm font-medium text-gray-700">SKU</label>
+    <input id="sku" type="text" maxlength="15"
+           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400"
+           placeholder="Escanea o escribe SKU">
 
-      <!-- Contenedor de contenido dinámico -->
-      <div id="content" class="content">
-        <!-- Sección de Inicio -->
-        <div id="inicio" class="content-section active">
-          <h2 class="text-xl font-bold text-center text-pink-700 mb-4">Bienvenido al Sistema de Gestión de SKU</h2>
-          <p class="text-center">Seleccione una opción del menú para gestionar SKU, entradas, salidas o consultas.</p>
-        </div>
+    <div id="scanner-container" class="hidden rounded-lg overflow-hidden transition-all duration-300">
+      <div id="qr-reader" style="width: 100%;"></div>
+    </div>
 
-        <!-- Sección de Entrada -->
-        <div id="entrada" class="content-section">
-          <h2 class="text-xl font-bold text-center text-pink-700 mb-4">Formulario de Entrada de SKU</h2>
-          <form id="entradaForm" class="space-y-4">
-            <div>
-              <label for="skuEntrada" class="block text-sm font-medium text-gray-700">SKU</label>
-              <input type="text" id="skuEntrada" name="skuEntrada" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required autofocus />
-            </div>
-            <div>
-              <label for="ubicacionEntrada" class="block text-sm font-medium text-gray-700">Ubicación</label>
-              <input type="text" id="ubicacionEntrada" name="ubicacionEntrada" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required />
-            </div>
-            <div>
-              <label for="cantidadEntrada" class="block text-sm font-medium text-gray-700">Cantidad</label>
-              <input type="number" id="cantidadEntrada" name="cantidadEntrada" min="1" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required />
-            </div>
-            <button type="submit" class="w-full bg-pink-600 text-white p-2 rounded-md hover:bg-pink-700 transition-all">Registrar entrada</button>
-          </form>
-        </div>
+    <div class="flex flex-col gap-2">
+      <button onclick="consultarSku()" id="btnConsultar"
+              class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 rounded-lg transition-all">
+        🔍 Consultar SKU
+      </button>
 
-        <!-- Sección de Salida -->
-        <div id="salida" class="content-section">
-          <h2 class="text-xl font-bold text-center text-pink-700 mb-4">Formulario de Salida de SKU</h2>
-          <form id="salidaForm" class="space-y-4">
-            <div>
-              <label for="skuSalida" class="block text-sm font-medium text-gray-700">SKU</label>
-              <input type="text" id="skuSalida" name="skuSalida" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required autofocus />
-            </div>
-            <div>
-              <label for="ubicacionSalida" class="block text-sm font-medium text-gray-700">Ubicación</label>
-              <input type="text" id="ubicacionSalida" name="ubicacionSalida" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required />
-            </div>
-            <div>
-              <label for="cantidadSalida" class="block text-sm font-medium text-gray-700">Cantidad</label>
-              <input type="number" id="cantidadSalida" name="cantidadSalida" min="1" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required />
-            </div>
-            <button type="submit" class="w-full bg-pink-600 text-white p-2 rounded-md hover:bg-pink-700 transition-all">Registrar salida</button>
-          </form>
-        </div>
-
-        <!-- Sección de Consulta -->
-        <div id="consulta" class="content-section">
-          <h2 class="text-xl font-bold text-center text-pink-700 mb-4">Consulta de SKU</h2>
-          <p class="text-center">Aquí puedes consultar los detalles de un SKU.</p>
-        </div>
-      </div>
+      <button onclick="iniciarScanner()" id="btnToggleScanner"
+              class="bg-gray-100 hover:bg-gray-200 text-pink-700 font-semibold py-2 rounded-lg transition-all border border-pink-400">
+        📷 Escanear código de barras
+      </button>
     </div>
   </div>
 
   <script>
+    let html5QrCode;
+    let escaneando = false;
+
+    // Función para iniciar o detener el escáner
+    function iniciarScanner() {
+      const scannerContainer = document.getElementById("scanner-container");
+      const botonScanner = document.getElementById("btnToggleScanner");
+
+      if (escaneando) {
+        // Detener el escáner si ya está en ejecución
+        detenerScanner();
+        botonScanner.innerText = "📷 Escanear código de barras";
+        escaneando = false;
+        return;
+      }
+
+      escaneando = true;
+      botonScanner.innerText = "🛑 Detener escaneo";
+      scannerContainer.classList.remove("hidden");
+      scannerContainer.classList.remove("borde-verde", "borde-error");
+
+      // Crear nuevo escáner y configurar
+      html5QrCode = new Html5Qrcode("qr-reader");
+
+      const config = {
+        fps: 10, // 10 frames per second
+        qrbox: { width: 250, height: 250 } // Definir el tamaño del área de escaneo
+      };
+
+      html5QrCode.start(
+        { facingMode: "environment" },
+        config,
+        onScanSuccess,
+        onScanFailure
+      ).catch(err => {
+        console.error("Error iniciando cámara:", err);
+        alert("No se pudo iniciar la cámara. Verifica permisos y conexión HTTPS.");
+        escaneando = false;
+        botonScanner.innerText = "📷 Escanear código de barras";
+      });
+    }
+
+    // Callback al escanear un código con éxito
+    function onScanSuccess(decodedText, decodedResult) {
+      console.log(`Código detectado: ${decodedText}`);
+      document.getElementById("sku").value = decodedText;
+      document.getElementById("sku").classList.add("borde-verde");
+
+      // Limpia el borde después de 1 segundo
+      setTimeout(() => {
+        document.getElementById("sku").classList.remove("borde-verde");
+      }, 1000);
+
+      detenerScanner();  // Detenemos el escáner después de detectar un código
+      document.getElementById("btnToggleScanner").innerText = "📷 Escanear código de barras";
+      escaneando = false;
+
+      consultarSku(); // Consultamos el SKU detectado
+    }
+
+    // Callback cuando el escáner no logra detectar un código
+    function onScanFailure(error) {
+      console.warn(`Error de escaneo: ${error}`);
+    }
+
+    // Función para detener el escáner
+    function detenerScanner() {
+      if (html5QrCode) {
+        html5QrCode.stop().then(() => {
+          html5QrCode.clear().then(() => {
+            console.log("Escáner detenido correctamente.");
+            document.getElementById("scanner-container").classList.add("hidden");
+          }).catch(err => {
+            console.error("Error al limpiar el escáner al detenerlo:", err);
+          });
+        }).catch(err => {
+          console.error("Error al detener el escáner:", err);
+        });
+      }
+    }
+
+    // Función para consultar el SKU en el sistema
+    function consultarSku() {
+      var sku = document.getElementById("sku").value;
+      var btnConsultar = document.getElementById("btnConsultar");
+
+      if (!sku) {
+        mostrarError("Por favor, ingrese un SKU.");
+        document.getElementById("sku").classList.add("borde-error");
+        return;
+      }
+
+      if (!/^[A-Z0-9]{1,15}$/.test(sku)) {
+        mostrarError("El SKU debe ser alfanumérico y de hasta 15 caracteres.");
+        document.getElementById("sku").classList.add("borde-error");
+        return;
+      }
+
+      document.getElementById("sku").classList.remove("borde-error");
+      mostrarCargando("Buscando información...");
+
+      btnConsultar.disabled = true;
+      btnConsultar.classList.add("opacity-50", "cursor-not-allowed");
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          mostrarResultado(result);
+          btnConsultar.disabled = false;
+          btnConsultar.classList.remove("opacity-50", "cursor-not-allowed");
+        })
+        .withFailureHandler(function(error) {
+          mostrarError("Hubo un problema al consultar el SKU.");
+          btnConsultar.disabled = false;
+          btnConsultar.classList.remove("opacity-50", "cursor-not-allowed");
+        })
+        .consultarSku(sku);
+    }
+
+    // Función para mostrar mensaje de error
+    function mostrarError(message) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: message,
+        confirmButtonText: 'OK'
+      });
+    }
+
+    // Función para mostrar mensaje de cargando
+    function mostrarCargando(message) {
+      Swal.fire({
+        title: message,
+        didOpen: () => Swal.showLoading(),
+        allowOutsideClick: false
+      });
+    }
+
+    // Función para mostrar el resultado de la consulta
+    function mostrarResultado(result) {
+      if (result) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Resultado encontrado',
+          html: `
+            <div><strong></strong><br>${result.descripcion}</div>
+            <div><strong>No. de Sección:</strong> ${result.numero}</div>
+            <div><strong>Sección:</strong> ${result.seccion}</div>
+            <div><strong>Cantidad:</strong> ${result.cantidad}</div>
+            <div><strong>Ubicación:</strong><br>${result.ubicacion}</div>
+          `,
+          confirmButtonText: 'OK'
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'No encontrado',
+          text: 'No se encontró el SKU o no tiene ubicaciones registradas.',
+          confirmButtonText: 'OK'
+        });
+      }
+    }
+
     window.onload = function () {
-      document.getElementById("skuEntrada").focus();
+      const inputSku = document.getElementById("sku");
+      inputSku.focus();
+
+      inputSku.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          consultarSku();
+        }
+      });
     };
 
-    // Función para mostrar una sección y ocultar las demás
-    function cambiarVista(seccion) {
-      const secciones = document.querySelectorAll(".content-section");
-      secciones.forEach(function (seccionElemento) {
-        seccionElemento.classList.remove("active");
-      });
-      document.getElementById(seccion).classList.add("active");
-    }
+    function ajustarAltura() {
+    const altura = document.body.scrollHeight;
+    parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
+  }
 
-    // Función para alternar el menú lateral
-    function toggleMenu() {
-      document.getElementById("menu").classList.toggle("open");
-    }
+  window.onload = ajustarAltura;
+  window.onresize = ajustarAltura;
+  
   </script>
 </body>
 </html>
