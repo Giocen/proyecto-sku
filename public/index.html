@@ -26,49 +26,58 @@
       max-width: 600px;
       width: 100%;
       box-sizing: border-box;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      overflow: hidden;
+    }
+
+    .menu-container.oculto {
+      max-height: 0;
+      opacity: 0;
+      padding: 0;
+      pointer-events: none;
     }
 
     h2 {
-      font-size: 28px;
+      font-size: 26px;
       color: #006747;
       font-weight: bold;
       text-transform: uppercase;
-      margin-bottom: 20px;
-      text-align: center;
+      margin-bottom: 16px;
       font-family: 'Helvetica', sans-serif;
+      text-align: center;
     }
 
     .logo {
       display: block;
-      margin: 0 auto 16px;
-      width: 150px;
+      margin: 0 auto 15px;
+      width: 160px;
     }
 
     .menu-buttons {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .menu-item {
-      padding: 10px 16px;
+      padding: 10px 14px;
       background-color: #E4007F;
       color: white;
       text-decoration: none;
       border-radius: 8px;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       transition: background-color 0.3s, transform 0.2s ease-in-out;
       cursor: pointer;
       border: none;
       display: flex;
       align-items: center;
-      justify-content: center;
     }
 
     .menu-item i {
-      margin-right: 8px;
+      margin-right: 6px;
       font-size: 14px;
     }
 
@@ -99,14 +108,12 @@
       background-color: #006747;
       color: white;
       padding: 10px 16px;
-      font-size: 15px;
+      font-size: 14px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
-      margin-top: 20px;
+      margin: 20px auto 0;
       display: block;
-      margin-left: auto;
-      margin-right: auto;
     }
 
     .inicio-button:hover {
@@ -120,11 +127,12 @@
 
     @media (max-width: 600px) {
       .menu-container {
-        padding: 16px;
+        padding: 15px;
       }
 
       .menu-item {
         width: 100%;
+        text-align: center;
         justify-content: center;
       }
     }
@@ -132,30 +140,30 @@
 </head>
 <body>
 
-  <div class="menu-container">
+  <div id="menuPrincipal" class="menu-container">
     <img src="/frontend/assets/liverpool-face.png" alt="Logo de Liverpool" class="logo" />
-    <h2>RYC SKU</h2>
+    <h2>RYC Sku</h2>
 
     <div class="menu-buttons">
       <button class="menu-item" onclick="cargarFormulario('entrada')">
-        ✅ Ingreso de SKU
+        ✅ Ingreso
       </button>
       <button class="menu-item" onclick="cargarFormulario('salida')">
-        🔁 Salida de SKU
+        📦 Salida
       </button>
       <button class="menu-item" onclick="cargarFormulario('consulta')">
-        🔍 Consulta de SKU
+        🔍 Consulta
       </button>
     </div>
-
-    <iframe id="formularioFrame" class="iframe-container" src="" scrolling="no"></iframe>
-
-    <button class="inicio-button" onclick="limpiarIframe()">
-      🏠 Inicio
-    </button>
-
-    <div class="footer">By: Argeo Cen</div>
   </div>
+
+  <iframe id="formularioFrame" class="iframe-container" src="" scrolling="no"></iframe>
+
+  <button class="inicio-button" onclick="limpiarIframe()">
+    <i class="fas fa-home"></i> Inicio
+  </button>
+
+  <div class="footer">By: Argeo Cen</div>
 
   <script>
     function cargarFormulario(tipo) {
@@ -165,28 +173,34 @@
         consulta: "backend/FormularioConsulta.html"
       };
       const iframe = document.getElementById("formularioFrame");
+      const menu = document.getElementById("menuPrincipal");
 
       iframe.style.opacity = 0;
       setTimeout(() => {
         iframe.src = urls[tipo];
-        iframe.style.height = "400px"; // Altura provisional
+        iframe.style.height = "400px"; // Altura provisional mientras carga
         iframe.style.opacity = 1;
+        menu.classList.add("oculto");
       }, 200);
     }
 
     function limpiarIframe() {
       const iframe = document.getElementById("formularioFrame");
+      const menu = document.getElementById("menuPrincipal");
+
       iframe.src = "";
       iframe.style.height = "0px";
+      iframe.style.opacity = 0;
+      menu.classList.remove("oculto");
     }
 
-    // Escuchar mensajes para ajustar la altura del iframe desde el contenido
     window.addEventListener("message", function(event) {
-      if (event.data?.tipo === "resize-iframe" || event.data?.tipo === "ajustarAltura") {
+      if (event.data && (event.data.tipo === "resize-iframe" || event.data.tipo === "ajustarAltura")) {
+        const altura = event.data.altura;
         const iframe = document.getElementById("formularioFrame");
-        iframe.style.height = event.data.altura + "px";
+        iframe.style.height = altura + "px";
       }
-    }, false);
+    });
   </script>
 
 </body>
