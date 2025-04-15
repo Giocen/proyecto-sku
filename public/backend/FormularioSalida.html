@@ -32,7 +32,7 @@
     <span class="text-xl font-semibold text-pink-800">Salida Sku</span>
     <div class="flex space-x-4">
       <button onclick="regresarAlMenu()" class="text-sm text-pink-700 hover:underline">🏠 Inicio</button>
-        <iframe id="formularioFrame" class="iframe-container" src="" scrolling="no"></iframe>
+      
   </div>
     </div>
   </div>
@@ -232,7 +232,8 @@
         cantidadInput.value = "";
       }
     }
-
+    
+   
     function ajustarAltura() {
       const altura = document.body.scrollHeight;
       parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
