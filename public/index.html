@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Menú de Gestión de SKU</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
@@ -23,33 +23,35 @@
       padding: 20px;
       border-radius: 16px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      max-width: 600px;
+      max-width: 700px;
       width: 100%;
       box-sizing: border-box;
-      transition: max-height 0.4s ease, opacity 0.3s ease;
-      overflow: hidden;
+      transition: all 0.3s ease;
     }
 
-    .menu-container.oculto {
+    .menu-container.colapsado {
       max-height: 0;
-      opacity: 0;
+      overflow: hidden;
       padding: 0;
-      pointer-events: none;
+      margin: 0;
+      opacity: 0;
+      transform: scaleY(0);
+      transition: all 0.4s ease;
     }
 
     h2 {
-      font-size: 26px;
+      font-size: 28px;
       color: #006747;
       font-weight: bold;
       text-transform: uppercase;
-      margin-bottom: 16px;
+      margin-bottom: 15px;
       font-family: 'Helvetica', sans-serif;
       text-align: center;
     }
 
     .logo {
       display: block;
-      margin: 0 auto 15px;
+      margin: 0 auto 10px;
       width: 160px;
     }
 
@@ -58,18 +60,16 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 15px;
     }
 
     .menu-item {
-      padding: 10px 14px;
+      padding: 10px 16px;
       background-color: #E4007F;
       color: white;
-      text-decoration: none;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 14px;
       font-weight: 600;
-      transition: background-color 0.3s, transform 0.2s ease-in-out;
       cursor: pointer;
       border: none;
       display: flex;
@@ -83,18 +83,16 @@
 
     .menu-item:hover {
       background-color: #c10067;
-      transform: translateY(-2px);
     }
 
     .iframe-container {
       width: 100%;
       border: none;
       border-radius: 8px;
-      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
-      transition: height 0.3s ease, opacity 0.3s ease;
-      animation: fadeIn 0.4s ease;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
       min-height: 300px;
       opacity: 0;
+      transition: height 0.3s ease, opacity 0.3s ease;
     }
 
     .footer {
@@ -109,11 +107,11 @@
       color: white;
       padding: 10px 16px;
       font-size: 14px;
-      border-radius: 8px;
+      border-radius: 6px;
       border: none;
       cursor: pointer;
-      margin: 20px auto 0;
       display: block;
+      margin: 20px auto 10px;
     }
 
     .inicio-button:hover {
@@ -127,21 +125,33 @@
 
     @media (max-width: 600px) {
       .menu-container {
-        padding: 15px;
+        padding: 16px;
+      }
+
+      .menu-buttons {
+        flex-direction: column;
       }
 
       .menu-item {
         width: 100%;
-        text-align: center;
         justify-content: center;
+      }
+
+      .iframe-container {
+        min-height: 400px;
+      }
+
+      .inicio-button {
+        width: 100%;
+        margin-top: 15px;
       }
     }
   </style>
 </head>
 <body>
 
-  <div id="menuPrincipal" class="menu-container">
-    <img src="/frontend/assets/liverpool-face.png" alt="Logo de Liverpool" class="logo" />
+  <div id="menuContainer" class="menu-container">
+    <img src="/frontend/assets/liverpool-face.png" alt="Logo de Liverpool" class="logo">
     <h2>RYC Sku</h2>
 
     <div class="menu-buttons">
@@ -149,7 +159,7 @@
         ✅ Ingreso
       </button>
       <button class="menu-item" onclick="cargarFormulario('salida')">
-        📦 Salida
+        📤 Salida
       </button>
       <button class="menu-item" onclick="cargarFormulario('consulta')">
         🔍 Consulta
@@ -160,7 +170,7 @@
   <iframe id="formularioFrame" class="iframe-container" src="" scrolling="no"></iframe>
 
   <button class="inicio-button" onclick="limpiarIframe()">
-    <i class="fas fa-home"></i> Inicio
+    🏠 Inicio
   </button>
 
   <div class="footer">By: Argeo Cen</div>
@@ -169,38 +179,36 @@
     function cargarFormulario(tipo) {
       const urls = {
         entrada: "backend/FormularioEntrada.html",
-        salida: "backend/FormularioSalida.html",
+        salida:  "backend/FormularioSalida.html",
         consulta: "backend/FormularioConsulta.html"
       };
-      const iframe = document.getElementById("formularioFrame");
-      const menu = document.getElementById("menuPrincipal");
+      const iframe = document.getElementById('formularioFrame');
+      const menu = document.getElementById('menuContainer');
 
       iframe.style.opacity = 0;
       setTimeout(() => {
         iframe.src = urls[tipo];
-        iframe.style.height = "400px"; // Altura provisional mientras carga
+        iframe.style.height = "400px";
         iframe.style.opacity = 1;
-        menu.classList.add("oculto");
+        menu.classList.add("colapsado");
       }, 200);
     }
 
     function limpiarIframe() {
-      const iframe = document.getElementById("formularioFrame");
-      const menu = document.getElementById("menuPrincipal");
-
+      const iframe = document.getElementById('formularioFrame');
+      const menu = document.getElementById('menuContainer');
       iframe.src = "";
       iframe.style.height = "0px";
-      iframe.style.opacity = 0;
-      menu.classList.remove("oculto");
+      menu.classList.remove("colapsado");
     }
 
     window.addEventListener("message", function(event) {
       if (event.data && (event.data.tipo === "resize-iframe" || event.data.tipo === "ajustarAltura")) {
         const altura = event.data.altura;
-        const iframe = document.getElementById("formularioFrame");
+        const iframe = document.getElementById('formularioFrame');
         iframe.style.height = altura + "px";
       }
-    });
+    }, false);
   </script>
 
 </body>
