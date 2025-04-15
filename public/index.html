@@ -9,47 +9,55 @@
 </head>
 <body class="bg-gray-100 font-sans">
 
-  <div class="flex h-screen">
+  <!-- Botón hamburguesa -->
+  <button id="menuBtn" class="fixed top-4 left-4 z-50 bg-pink-600 text-white p-2 rounded-md shadow-md lg:hidden">
+    ☰ Menú
+  </button>
 
+  <div class="flex h-screen overflow-hidden">
     <!-- Menú lateral -->
-    <aside class="w-64 bg-white shadow-lg flex flex-col justify-between">
-      <div>
-        <div class="flex items-center justify-center h-20 border-b">
-          <img src="/frontend/assets/liverpool-face.png" alt="Logo" class="h-10" />
-        </div>
-
-        <nav class="flex flex-col p-4 gap-2">
-          <button onclick="cargarFormulario('entrada')" class="text-left px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition">
-            ✅ Ingreso
-          </button>
-          <button onclick="cargarFormulario('salida')" class="text-left px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition">
-            📤 Salida
-          </button>
-          <button onclick="cargarFormulario('consulta')" class="text-left px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition">
-            🔍 Consulta
-          </button>
-          <button onclick="limpiarIframe()" class="text-left mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-            🏠 Inicio
-          </button>
-        </nav>
+    <aside id="sidebar" class="fixed lg:static left-0 top-0 w-64 bg-white h-full shadow-lg transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40">
+      <div class="flex items-center justify-center h-20 border-b">
+        <img src="/frontend/assets/liverpool-face.png" alt="Logo" class="h-10" />
       </div>
 
-      <div class="p-4 text-center text-xs text-gray-400">
+      <nav class="flex flex-col p-4 gap-2">
+        <button onclick="cargarFormulario('entrada')" class="text-left px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition">
+          ✅ Ingreso
+        </button>
+        <button onclick="cargarFormulario('salida')" class="text-left px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition">
+          📤 Salida
+        </button>
+        <button onclick="cargarFormulario('consulta')" class="text-left px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition">
+          🔍 Consulta
+        </button>
+        <button onclick="limpiarIframe()" class="text-left mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+          🏠 Inicio
+        </button>
+      </nav>
+
+      <div class="p-4 text-center text-xs text-gray-400 absolute bottom-0 w-full">
         By: Argeo Cen
       </div>
     </aside>
 
     <!-- Contenedor del iframe -->
-    <main class="flex-1 flex flex-col items-center justify-center relative">
+    <main class="flex-1 ml-0 lg:ml-64 flex flex-col items-center justify-center relative w-full h-full">
       <iframe id="formularioFrame" class="w-full h-full hidden border-none transition duration-300 ease-in-out" src=""></iframe>
       <div id="inicioTexto" class="text-center text-gray-500">
         <h1 class="text-3xl font-semibold mb-4">Bienvenido a RYC Sku</h1>
-        <p>Selecciona una opción del menú lateral para comenzar.</p>
+        <p>Selecciona una opción del menú para comenzar.</p>
       </div>
     </main>
   </div>
 
   <script>
+    // Toggle del menú lateral en móvil
+    document.getElementById("menuBtn").addEventListener("click", () => {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("-translate-x-full");
+    });
+
     function cargarFormulario(tipo) {
       const urls = {
         entrada: "backend/FormularioEntrada.html",
@@ -62,6 +70,11 @@
       iframe.src = urls[tipo];
       iframe.classList.remove('hidden');
       inicioTexto.style.display = 'none';
+
+      // Oculta el menú en móvil después de seleccionar
+      if (window.innerWidth < 1024) {
+        document.getElementById("sidebar").classList.add("-translate-x-full");
+      }
     }
 
     function limpiarIframe() {
@@ -69,6 +82,11 @@
       iframe.src = '';
       iframe.classList.add('hidden');
       document.getElementById('inicioTexto').style.display = 'block';
+
+      // Oculta el menú en móvil después de seleccionar
+      if (window.innerWidth < 1024) {
+        document.getElementById("sidebar").classList.add("-translate-x-full");
+      }
     }
   </script>
 </body>
