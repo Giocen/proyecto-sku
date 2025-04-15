@@ -99,6 +99,25 @@
       background-color: #004f3a;
     }
 
+    /* Estilo para el botón de menú dentro del formulario */
+    .menu-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: #E4007F;
+      color: white;
+      border-radius: 50%;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      z-index: 100;
+      font-size: 18px;
+    }
+
+    .menu-button:hover {
+      background-color: #c10067;
+    }
+
     /* Responsividad */
     @media (max-width: 600px) {
       .menu-container {
@@ -139,6 +158,9 @@
 
   <!-- Contenedor del formulario (oculto inicialmente) -->
   <div id="formularioContainer" class="formulario-container">
+    <!-- Botón de menú en el formulario -->
+    <button class="menu-button" onclick="regresarAlMenu()">☰</button>
+
     <iframe id="formularioFrame" class="iframe-container" src="" scrolling="no"></iframe>
   </div>
 
@@ -181,6 +203,16 @@
 
       iframe.src = "";
       iframe.style.height = "0px";
+      
+      // Ocultar el formulario y mostrar el menú
+      formularioContainer.style.display = 'none';
+      menu.style.display = 'block';
+    }
+
+    // Función para regresar al menú desde el formulario
+    function regresarAlMenu() {
+      const formularioContainer = document.getElementById('formularioContainer');
+      const menu = document.getElementById('menuContainer');
       
       // Ocultar el formulario y mostrar el menú
       formularioContainer.style.display = 'none';
