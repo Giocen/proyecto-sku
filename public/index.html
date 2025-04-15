@@ -4,21 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Menú de Gestión de SKU</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     body {
       font-family: 'Arial', sans-serif;
       background-color: #f4f4f9;
       margin: 0;
-      padding: 0;
+      padding: 40px 0 0;
       display: flex;
       justify-content: center;
       align-items: flex-start;
       min-height: 100vh;
-      padding-top: 40px;
     }
 
     .menu-container {
+      display: none; /* Oculto al inicio */
       background-color: #fff;
       padding: 30px;
       border-radius: 16px;
@@ -26,6 +25,14 @@
       max-width: 800px;
       width: 100%;
       box-sizing: border-box;
+      transition: max-height 0.5s ease, opacity 0.3s ease;
+      overflow: hidden;
+      opacity: 0;
+    }
+
+    .menu-container.visible {
+      display: block;
+      opacity: 1;
     }
 
     h2 {
@@ -63,13 +70,6 @@
       transition: background-color 0.3s, transform 0.2s ease-in-out;
       cursor: pointer;
       border: none;
-      display: flex;
-      align-items: center;
-    }
-
-    .menu-item i {
-      margin-right: 8px;
-      font-size: 16px;
     }
 
     .menu-item:hover {
@@ -82,8 +82,24 @@
       border: none;
       border-radius: 8px;
       box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 20px;
       transition: height 0.3s ease, opacity 0.3s ease;
-      animation: fadeIn 0.4s ease;
+    }
+
+    .iframe-entrada {
+      height: 800px;
+    }
+
+    .iframe-salida {
+      height: 600px;
+    }
+
+    .iframe-consulta {
+      height: 500px;
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     .footer {
@@ -102,74 +118,29 @@
       border: none;
       cursor: pointer;
       margin-top: 20px;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
+      transition: background-color 0.3s;
     }
 
     .inicio-button:hover {
       background-color: #004f3a;
     }
-
-    .iframe-entrada {
-      height: 800px;
-    }
-
-    .iframe-salida {
-      height: 600px;
-    }
-
-    .iframe-consulta {
-      height: 500px;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.98); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    @media (max-width: 600px) {
-      .menu-container {
-        padding: 20px;
-      }
-
-      .menu-item {
-        width: 100%;
-        text-align: center;
-        justify-content: center;
-      }
-
-      .iframe-entrada,
-      .iframe-salida,
-      .iframe-consulta {
-        height: 85vh;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <div class="menu-container">
+  <div class="menu-container" id="menuContainer">
     <img src="/frontend/assets/liverpool-face.png" alt="Logo de Liverpool" class="logo">
     <h2>RYC Sku</h2>
 
     <div class="menu-buttons">
-      <button class="menu-item" onclick="cargarFormulario('entrada')">
-        <i class="fas fa-arrow-down"></i> Ingreso de Sku
-      </button>
-      <button class="menu-item" onclick="cargarFormulario('salida')">
-        <i class="fas fa-arrow-up"></i> Salida de Sku
-      </button>
-      <button class="menu-item" onclick="cargarFormulario('consulta')">
-        <i class="fas fa-search"></i> Consulta de Sku
-      </button>
+      <button class="menu-item" onclick="cargarFormulario('entrada')">Ingreso de Sku</button>
+      <button class="menu-item" onclick="cargarFormulario('salida')">Salida de Sku</button>
+      <button class="menu-item" onclick="cargarFormulario('consulta')">Consulta de Sku</button>
     </div>
 
-    <iframe id="formularioFrame" class="iframe-container" src=""></iframe>
+    <iframe id="formularioFrame" class="iframe-container hidden" src=""></iframe>
 
-    <button class="inicio-button" onclick="limpiarIframe()">
-      <i class="fas fa-home"></i> Inicio
-    </button>
+    <button id="inicioBtn" class="inicio-button hidden" onclick="limpiarIframe()">Inicio</button>
 
     <div class="footer">By: Argeo Cen</div>
   </div>
@@ -178,32 +149,40 @@
     function cargarFormulario(tipo) {
       const urls = {
         entrada: "backend/FormularioEntrada.html",
-        salida:  "backend/FormularioSalida.html",
+        salida: "backend/FormularioSalida.html",
         consulta: "backend/FormularioConsulta.html"
       };
-      const iframe = document.getElementById('formularioFrame');
 
-      iframe.style.opacity = 0;
+      const iframe = document.getElementById('formularioFrame');
+      const contenedor = document.getElementById('menuContainer');
+      const botonInicio = document.getElementById('inicioBtn');
+
+      iframe.classList.add('hidden');
+      iframe.src = "";
+
+      // Limpiar clases previas
+      iframe.classList.remove('iframe-entrada', 'iframe-salida', 'iframe-consulta');
+
       setTimeout(() => {
         iframe.src = urls[tipo];
-        iframe.classList.remove('iframe-entrada', 'iframe-salida', 'iframe-consulta');
+        iframe.classList.remove('hidden');
+        iframe.classList.add(`iframe-${tipo}`);
 
-        if (tipo === 'entrada') {
-          iframe.classList.add('iframe-entrada');
-        } else if (tipo === 'salida') {
-          iframe.classList.add('iframe-salida');
-        } else if (tipo === 'consulta') {
-          iframe.classList.add('iframe-consulta');
-        }
-
-        iframe.style.opacity = 1;
-      }, 200);
+        contenedor.classList.add('visible');
+        botonInicio.classList.remove('hidden');
+      }, 100);
     }
 
     function limpiarIframe() {
       const iframe = document.getElementById('formularioFrame');
+      const contenedor = document.getElementById('menuContainer');
+      const botonInicio = document.getElementById('inicioBtn');
+
       iframe.src = "";
+      iframe.classList.add('hidden');
       iframe.classList.remove('iframe-entrada', 'iframe-salida', 'iframe-consulta');
+      botonInicio.classList.add('hidden');
+      contenedor.classList.remove('visible');
     }
   </script>
 
