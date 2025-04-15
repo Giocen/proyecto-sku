@@ -222,6 +222,14 @@
         }
       });
     };
+
+    function ajustarAltura() {
+    const altura = document.body.scrollHeight;
+    parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
+  }
+
+  window.onload = ajustarAltura;
+  window.onresize = ajustarAltura;
   </script>
 </body>
 </html>
