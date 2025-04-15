@@ -211,13 +211,10 @@
 
     // Función para regresar al menú desde el formulario
     function regresarAlMenu() {
-  window.location.href = "index.html"; // O el enlace que uses como "menú principal"
-}
-      
-      // Ocultar el formulario y mostrar el menú
-      formularioContainer.style.display = 'none';
-      menu.style.display = 'block';
-    
+      // Regresar al menú principal sin recargar
+      document.getElementById('formularioContainer').style.display = 'none';
+      document.getElementById('menuContainer').style.display = 'block';
+    }
   </script>
 
 </body>
