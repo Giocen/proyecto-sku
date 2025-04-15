@@ -170,7 +170,6 @@
       iframe.style.opacity = 0;
       setTimeout(() => {
         iframe.src = urls[tipo];
-        iframe.style.height = "400px"; // Altura provisional mientras carga
         iframe.style.opacity = 1;
       }, 200);
     }
@@ -181,14 +180,12 @@
       iframe.style.height = "0px";
     }
 
-    // Ajuste dinámico del iframe según su contenido
-    window.addEventListener("message", function(event) {
-      if (event.data && event.data.tipo === "resize-iframe") {
-        const altura = event.data.altura;
-        const iframe = document.getElementById('formularioFrame');
-        iframe.style.height = altura + "px";
+    window.addEventListener("message", function (event) {
+      if (event.data.tipo === "ajustarAltura") {
+        const iframe = document.getElementById("formularioFrame");
+        iframe.style.height = event.data.altura + "px";
       }
-    }, false);
+    });
   </script>
 
 </body>
