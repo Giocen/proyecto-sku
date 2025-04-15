@@ -61,20 +61,15 @@
 </head>
 <body class="bg-gray-50 text-gray-800 p-4">
 
-  <!-- Menú lateral -->
-  <div id="menu" class="menu">
-    <ul>
-      <li><a href="#">Inicio</a></li>
-      <li><a href="#">Consulta SKU</a></li>
-      <li><a href="#">Reportes</a></li>
-      <li><a href="#">Ajustes</a></li>
-    </ul>
+<!-- Menú superior -->
+<div class="bg-white shadow-md w-full p-4 fixed top-0 left-0 z-10">
+  <div class="flex justify-between items-center">
+    <span class="text-xl font-semibold text-pink-800">Consulta Sku</span>
+    <div class="flex space-x-4">
+      <button onclick="irInicio()" class="text-sm text-pink-700 hover:underline">🏠 Inicio</button>
+    </div>
   </div>
-
-  <!-- Botón para abrir/cerrar el menú -->
-  <button onclick="toggleMenu()" class="menu-button">
-    ☰
-  </button>
+</div>
 
   <div class="max-w-md mx-auto bg-white shadow-xl rounded-2xl p-6 space-y-4 border border-pink-300">
     <img src="https://i.imgur.com/n66e0SR.png"
