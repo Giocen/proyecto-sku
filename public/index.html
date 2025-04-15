@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Menú de Gestión de SKU</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -62,6 +63,13 @@
       transition: background-color 0.3s, transform 0.2s ease-in-out;
       cursor: pointer;
       border: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .menu-item i {
+      margin-right: 8px;
+      font-size: 16px;
     }
 
     .menu-item:hover {
@@ -74,7 +82,8 @@
       border: none;
       border-radius: 8px;
       box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-      transition: height 0.3s ease;
+      transition: height 0.3s ease, opacity 0.3s ease;
+      animation: fadeIn 0.4s ease;
     }
 
     .footer {
@@ -93,6 +102,9 @@
       border: none;
       cursor: pointer;
       margin-top: 20px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .inicio-button:hover {
@@ -100,15 +112,38 @@
     }
 
     .iframe-entrada {
-      height: 800px; /* Ajuste para formulario de entrada */
+      height: 800px;
     }
 
     .iframe-salida {
-      height: 600px; /* Ajuste para formulario de salida */
+      height: 600px;
     }
 
     .iframe-consulta {
-      height: 500px; /* Ajuste para formulario de consulta */
+      height: 500px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 600px) {
+      .menu-container {
+        padding: 20px;
+      }
+
+      .menu-item {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .iframe-entrada,
+      .iframe-salida,
+      .iframe-consulta {
+        height: 85vh;
+      }
     }
   </style>
 </head>
@@ -119,14 +154,22 @@
     <h2>RYC Sku</h2>
 
     <div class="menu-buttons">
-      <button class="menu-item" onclick="cargarFormulario('entrada')">Ingreso de Sku</button>
-      <button class="menu-item" onclick="cargarFormulario('salida')">Salida de Sku</button>
-      <button class="menu-item" onclick="cargarFormulario('consulta')">Consulta de Sku</button>
+      <button class="menu-item" onclick="cargarFormulario('entrada')">
+        <i class="fas fa-arrow-down"></i> Ingreso de Sku
+      </button>
+      <button class="menu-item" onclick="cargarFormulario('salida')">
+        <i class="fas fa-arrow-up"></i> Salida de Sku
+      </button>
+      <button class="menu-item" onclick="cargarFormulario('consulta')">
+        <i class="fas fa-search"></i> Consulta de Sku
+      </button>
     </div>
 
-    <iframe id="formularioFrame" class="iframe-container"></iframe>
+    <iframe id="formularioFrame" class="iframe-container" src=""></iframe>
 
-    <button class="inicio-button" onclick="limpiarIframe()">Inicio</button>
+    <button class="inicio-button" onclick="limpiarIframe()">
+      <i class="fas fa-home"></i> Inicio
+    </button>
 
     <div class="footer">By: Argeo Cen</div>
   </div>
@@ -139,17 +182,22 @@
         consulta: "backend/FormularioConsulta.html"
       };
       const iframe = document.getElementById('formularioFrame');
-      iframe.src = urls[tipo];
 
-      // Cambiar la clase de acuerdo al tipo de formulario cargado
-      iframe.classList.remove('iframe-entrada', 'iframe-salida', 'iframe-consulta');
-      if (tipo === 'entrada') {
-        iframe.classList.add('iframe-entrada');
-      } else if (tipo === 'salida') {
-        iframe.classList.add('iframe-salida');
-      } else if (tipo === 'consulta') {
-        iframe.classList.add('iframe-consulta');
-      }
+      iframe.style.opacity = 0;
+      setTimeout(() => {
+        iframe.src = urls[tipo];
+        iframe.classList.remove('iframe-entrada', 'iframe-salida', 'iframe-consulta');
+
+        if (tipo === 'entrada') {
+          iframe.classList.add('iframe-entrada');
+        } else if (tipo === 'salida') {
+          iframe.classList.add('iframe-salida');
+        } else if (tipo === 'consulta') {
+          iframe.classList.add('iframe-consulta');
+        }
+
+        iframe.style.opacity = 1;
+      }, 200);
     }
 
     function limpiarIframe() {
