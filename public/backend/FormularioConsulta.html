@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Formulario de Salida de SKU</title>
+  <title>Consulta Sku</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
@@ -37,16 +37,25 @@
       font-weight: bold;
       color: #e6007e;
     }
+    .content {
+      padding: 2rem;
+    }
+    .content-section {
+      display: none;
+    }
+    .content-section.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
   <!-- Menú lateral -->
   <div id="menu" class="menu">
     <ul>
-      <li><a href="#" onclick="regresarAlMenu()">🏠 Inicio</a></li>
-      <li><a href="#">📦 Entrada</a></li>
-      <li><a href="#">🚚 Salida</a></li>
-      <li><a href="#">🔍 Consulta</a></li>
+      <li><a href="#" onclick="cambiarVista('inicio')">🏠 Inicio</a></li>
+      <li><a href="#" onclick="cambiarVista('entrada')">📦 Entrada</a></li>
+      <li><a href="#" onclick="cambiarVista('salida')">🚚 Salida</a></li>
+      <li><a href="#" onclick="cambiarVista('consulta')">🔍 Consulta</a></li>
     </ul>
   </div>
 
@@ -57,84 +66,83 @@
         <button onclick="toggleMenu()" class="text-2xl text-pink-800 font-bold focus:outline-none">☰</button>
       </div>
 
+      <!-- Logo -->
       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Liverpool_logo.svg/2560px-Liverpool_logo.svg.png" alt="Liverpool Logo" class="w-32 mx-auto mb-2" />
-      <h2 class="text-xl font-bold text-center text-pink-700 mb-4">Formulario de Salida de SKU</h2>
 
-      <form id="salidaForm" class="space-y-4">
-        <div>
-          <label for="sku" class="block text-sm font-medium text-gray-700">SKU</label>
-          <input type="text" id="sku" name="sku" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required autofocus />
+      <!-- Contenedor de contenido dinámico -->
+      <div id="content" class="content">
+        <!-- Sección de Inicio -->
+        <div id="inicio" class="content-section active">
+          <h2 class="text-xl font-bold text-center text-pink-700 mb-4">Bienvenido al Sistema de Gestión de SKU</h2>
+          <p class="text-center">Seleccione una opción del menú para gestionar SKU, entradas, salidas o consultas.</p>
         </div>
-        <div>
-          <label for="ubicacion" class="block text-sm font-medium text-gray-700">Ubicación</label>
-          <input type="text" id="ubicacion" name="ubicacion" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required />
-        </div>
-        <div>
-          <label for="cantidad" class="block text-sm font-medium text-gray-700">Cantidad</label>
-          <input type="number" id="cantidad" name="cantidad" min="1" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required />
-        </div>
-        <button type="submit" class="w-full bg-pink-600 text-white p-2 rounded-md hover:bg-pink-700 transition-all">Registrar salida</button>
-      </form>
 
-      <p id="mensaje" class="text-center text-sm mt-4 text-green-600"></p>
+        <!-- Sección de Entrada -->
+        <div id="entrada" class="content-section">
+          <h2 class="text-xl font-bold text-center text-pink-700 mb-4">Formulario de Entrada de SKU</h2>
+          <form id="entradaForm" class="space-y-4">
+            <div>
+              <label for="skuEntrada" class="block text-sm font-medium text-gray-700">SKU</label>
+              <input type="text" id="skuEntrada" name="skuEntrada" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required autofocus />
+            </div>
+            <div>
+              <label for="ubicacionEntrada" class="block text-sm font-medium text-gray-700">Ubicación</label>
+              <input type="text" id="ubicacionEntrada" name="ubicacionEntrada" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required />
+            </div>
+            <div>
+              <label for="cantidadEntrada" class="block text-sm font-medium text-gray-700">Cantidad</label>
+              <input type="number" id="cantidadEntrada" name="cantidadEntrada" min="1" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required />
+            </div>
+            <button type="submit" class="w-full bg-pink-600 text-white p-2 rounded-md hover:bg-pink-700 transition-all">Registrar entrada</button>
+          </form>
+        </div>
+
+        <!-- Sección de Salida -->
+        <div id="salida" class="content-section">
+          <h2 class="text-xl font-bold text-center text-pink-700 mb-4">Formulario de Salida de SKU</h2>
+          <form id="salidaForm" class="space-y-4">
+            <div>
+              <label for="skuSalida" class="block text-sm font-medium text-gray-700">SKU</label>
+              <input type="text" id="skuSalida" name="skuSalida" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required autofocus />
+            </div>
+            <div>
+              <label for="ubicacionSalida" class="block text-sm font-medium text-gray-700">Ubicación</label>
+              <input type="text" id="ubicacionSalida" name="ubicacionSalida" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required />
+            </div>
+            <div>
+              <label for="cantidadSalida" class="block text-sm font-medium text-gray-700">Cantidad</label>
+              <input type="number" id="cantidadSalida" name="cantidadSalida" min="1" class="mt-1 p-2 w-full border rounded-md focus:ring-2 focus:ring-pink-500" required />
+            </div>
+            <button type="submit" class="w-full bg-pink-600 text-white p-2 rounded-md hover:bg-pink-700 transition-all">Registrar salida</button>
+          </form>
+        </div>
+
+        <!-- Sección de Consulta -->
+        <div id="consulta" class="content-section">
+          <h2 class="text-xl font-bold text-center text-pink-700 mb-4">Consulta de SKU</h2>
+          <p class="text-center">Aquí puedes consultar los detalles de un SKU.</p>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
     window.onload = function () {
-      document.getElementById("sku").focus();
+      document.getElementById("skuEntrada").focus();
     };
 
-    document.getElementById("salidaForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const sku = document.getElementById("sku").value.trim();
-      const ubicacion = document.getElementById("ubicacion").value.trim();
-      const cantidad = document.getElementById("cantidad").value.trim();
-
-      if (!/^\d+$/.test(sku)) {
-        mostrarMensaje("El SKU debe contener solo números", "error");
-        return;
-      }
-
-      if (!ubicacion.match(/^[a-zA-Z0-9]+$/)) {
-        mostrarMensaje("La ubicación debe ser alfanumérica", "error");
-        return;
-      }
-
-      if (isNaN(cantidad) || parseInt(cantidad) <= 0) {
-        mostrarMensaje("La cantidad debe ser un número positivo", "error");
-        return;
-      }
-
-      google.script.run
-        .withSuccessHandler(function () {
-          mostrarMensaje("Salida registrada exitosamente", "success");
-          document.getElementById("salidaForm").reset();
-          document.getElementById("sku").focus();
-        })
-        .withFailureHandler(function () {
-          mostrarMensaje("Error al registrar salida", "error");
-        })
-        .registrarSalida(sku, ubicacion, cantidad);
-    });
-
-    function mostrarMensaje(mensaje, tipo) {
-      Swal.fire({
-        icon: tipo,
-        title: tipo === "success" ? "¡Éxito!" : "¡Error!",
-        text: mensaje,
-        timer: 2000,
-        showConfirmButton: false,
+    // Función para mostrar una sección y ocultar las demás
+    function cambiarVista(seccion) {
+      const secciones = document.querySelectorAll(".content-section");
+      secciones.forEach(function (seccionElemento) {
+        seccionElemento.classList.remove("active");
       });
+      document.getElementById(seccion).classList.add("active");
     }
 
+    // Función para alternar el menú lateral
     function toggleMenu() {
       document.getElementById("menu").classList.toggle("open");
-    }
-
-    function regresarAlMenu() {
-      document.getElementById("menu").classList.remove("open");
     }
   </script>
 </body>
