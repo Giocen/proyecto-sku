@@ -16,8 +16,10 @@
       align-items: flex-start;
       min-height: 100vh;
       flex-direction: column;
+      transition: all 0.3s ease;
     }
 
+    /* Contenedor del menú */
     .menu-container {
       background-color: #fff;
       padding: 20px;
@@ -26,38 +28,23 @@
       max-width: 700px;
       width: 100%;
       box-sizing: border-box;
-      transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: all 0.3s ease;
     }
 
-    .menu-container.colapsado {
-      max-height: 0;
-      overflow: hidden;
-      padding: 0;
-      margin: 0;
-      opacity: 0;
-      transform: scaleY(0);
-      transition: all 0.4s ease;
+    /* Contenedor oculto del formulario */
+    .formulario-container {
+      display: none;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+      min-height: 300px;
     }
 
-    h2 {
-      font-size: 28px;
-      color: #006747;
-      font-weight: bold;
-      text-transform: uppercase;
-      margin-bottom: 15px;
-      font-family: 'Helvetica', sans-serif;
-      text-align: center;
-    }
-
-    .logo {
-      display: block;
-      margin: 0 auto 10px;
-      width: 160px;
-    }
-
+    /* Botones del menú */
     .menu-buttons {
       display: flex;
       flex-wrap: wrap;
@@ -88,23 +75,7 @@
       background-color: #c10067;
     }
 
-    .iframe-container {
-      width: 100%;
-      border: none;
-      border-radius: 8px;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-      min-height: 300px;
-      opacity: 0;
-      transition: height 0.3s ease, opacity 0.3s ease;
-    }
-
-    .footer {
-      font-size: 12px;
-      text-align: center;
-      margin-top: 20px;
-      color: #444;
-    }
-
+    /* Estilo para el botón de inicio */
     .inicio-button {
       background-color: #006747;
       color: white;
@@ -121,20 +92,11 @@
       background-color: #004f3a;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.98); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
+    /* Responsividad */
     @media (max-width: 600px) {
-      body {
-        padding: 0 10px;
-        justify-content: flex-start;
-      }
-
       .menu-container {
-        padding: 16px;
         width: 100%;
+        padding: 16px;
       }
 
       .menu-buttons {
@@ -145,20 +107,12 @@
         width: 100%;
         justify-content: center;
       }
-
-      .iframe-container {
-        min-height: 400px;
-      }
-
-      .inicio-button {
-        width: 100%;
-        margin-top: 15px;
-      }
     }
   </style>
 </head>
 <body>
 
+  <!-- Contenedor del menú -->
   <div id="menuContainer" class="menu-container">
     <img src="/frontend/assets/liverpool-face.png" alt="Logo de Liverpool" class="logo">
     <h2>RYC Sku</h2>
@@ -176,8 +130,12 @@
     </div>
   </div>
 
-  <iframe id="formularioFrame" class="iframe-container" src="" scrolling="no"></iframe>
+  <!-- Contenedor del formulario (oculto inicialmente) -->
+  <div id="formularioContainer" class="formulario-container">
+    <iframe id="formularioFrame" class="iframe-container" src="" scrolling="no"></iframe>
+  </div>
 
+  <!-- Botón de inicio -->
   <button class="inicio-button" onclick="limpiarIframe()">
     🏠 Inicio
   </button>
@@ -185,6 +143,7 @@
   <div class="footer">By: Argeo Cen</div>
 
   <script>
+    // Función para cargar el formulario
     function cargarFormulario(tipo) {
       const urls = {
         entrada: "backend/FormularioEntrada.html",
@@ -193,31 +152,33 @@
       };
       const iframe = document.getElementById('formularioFrame');
       const menu = document.getElementById('menuContainer');
+      const formularioContainer = document.getElementById('formularioContainer');
+
+      // Mostrar el contenedor del formulario y ocultar el menú
+      formularioContainer.style.display = 'block';
+      menu.style.display = 'none';
 
       iframe.style.opacity = 0;
       setTimeout(() => {
         iframe.src = urls[tipo];
         iframe.style.height = "400px";
         iframe.style.opacity = 1;
-        menu.classList.add("colapsado");
       }, 200);
     }
 
+    // Función para limpiar el iframe y regresar al menú
     function limpiarIframe() {
       const iframe = document.getElementById('formularioFrame');
+      const formularioContainer = document.getElementById('formularioContainer');
       const menu = document.getElementById('menuContainer');
+
       iframe.src = "";
       iframe.style.height = "0px";
-      menu.classList.remove("colapsado");
+      
+      // Ocultar el formulario y mostrar el menú
+      formularioContainer.style.display = 'none';
+      menu.style.display = 'block';
     }
-
-    window.addEventListener("message", function(event) {
-      if (event.data && (event.data.tipo === "resize-iframe" || event.data.tipo === "ajustarAltura")) {
-        const altura = event.data.altura;
-        const iframe = document.getElementById('formularioFrame');
-        iframe.style.height = altura + "px";
-      }
-    }, false);
   </script>
 
 </body>
