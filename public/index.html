@@ -158,12 +158,11 @@
 
   <!-- Contenedor del formulario (oculto inicialmente) -->
   <div id="formularioContainer" class="formulario-container">
-<!-- Menú superior -->
-<div class="bg-white shadow-md w-full p-4 fixed top-0 left-0 z-10">
-  <div class="flex justify-between items-center">
-    <span class="text-xl font-semibold text-pink-800">Salida Sku</span>
-    <div class="flex space-x-4">
-      <button onclick="regresarAlMenu()" class="text-sm text-pink-700 hover:underline">🏠 Inicio</button>
+    <!-- Botón de menú en el formulario -->
+    <button class="menu-button" onclick="regresarAlMenu()">☰</button>
+
+    <iframe id="formularioFrame" class="iframe-container" src="" scrolling="no"></iframe>
+  </div>
 
   <!-- Botón de inicio -->
   <button class="inicio-button" onclick="limpiarIframe()">
