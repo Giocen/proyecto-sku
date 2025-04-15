@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de SKU</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ingreso de SKU</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
@@ -18,68 +18,81 @@
   </style>
   <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
 </head>
-<body class="bg-gradient-to-r from-pink-100 to-purple-200 min-h-screen flex items-center justify-center">
-  <div class="bg-white shadow-xl rounded-xl p-6 w-full max-w-md">
-    <div class="flex items-center justify-center mb-6">
-      <img src="https://i.imgur.com/n66e0SR.png" alt="Logo Liverpool" class="h-10 mr-2">
-      <h3 class="text-2xl font-extrabold text-pink-800">Ingreso SKU</h3>
+<body class="bg-gradient-to-r from-pink-100 to-purple-200 min-h-screen">
+
+  <!-- Menú superior -->
+  <div class="bg-white shadow-md w-full p-4 fixed top-0 left-0 z-10">
+    <div class="flex justify-between items-center">
+      <span class="text-xl font-semibold text-pink-800">Gestión de SKU</span>
+      <div class="flex space-x-4">
+        <button onclick="irInicio()" class="text-sm text-pink-700 hover:underline">🏠 Inicio</button>
+      </div>
     </div>
+  </div>
 
-    <!-- Campo SKU -->
-    <label class="block text-sm font-medium text-gray-700">SKU:</label>
-    <input type="text" id="sku" maxlength="10" autocomplete="off" placeholder="Ej. 123456"
-           class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-4 focus:ring-pink-500 focus:border-pink-600 outline-none"
-           onkeydown="detectarEnter(event, 'ubicacion')" list="skuLista">
-    <datalist id="skuLista"></datalist>
+  <div class="flex justify-center items-start pt-24 px-4">
+    <div class="bg-white shadow-xl rounded-xl p-6 w-full max-w-md">
+      <div class="flex items-center justify-center mb-6">
+        <img src="https://i.imgur.com/n66e0SR.png" alt="Logo Liverpool" class="h-10 mr-2">
+        <h3 class="text-2xl font-extrabold text-pink-800">Ingreso SKU</h3>
+      </div>
 
-    <!-- Campo Ubicación -->
-    <label class="block text-sm font-medium text-gray-700 mt-4">Ubicación:</label>
-    <input type="text" id="ubicacion" autocomplete="off" placeholder="Ej. A3B2"
-           class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-4 focus:ring-pink-500 focus:border-pink-600 outline-none"
-           onkeydown="detectarEnter(event, 'cantidad')" list="ubicacionLista">
-    <datalist id="ubicacionLista"></datalist>
+      <!-- Campo SKU -->
+      <label class="block text-sm font-medium text-gray-700">SKU:</label>
+      <input type="text" id="sku" maxlength="10" autocomplete="off" placeholder="Ej. 123456"
+        class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-4 focus:ring-pink-500 focus:border-pink-600 outline-none"
+        onkeydown="detectarEnter(event, 'ubicacion')" list="skuLista">
+      <datalist id="skuLista"></datalist>
 
-    <!-- Campo Cantidad -->
-    <label class="block text-sm font-medium text-gray-700 mt-4">Cantidad:</label>
-    <input type="number" id="cantidad" value="1" min="1"
-           class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-4 focus:ring-pink-500 focus:border-pink-600 outline-none"
-           onkeydown="detectarEnter(event, 'sku')">
+      <!-- Campo Ubicación -->
+      <label class="block text-sm font-medium text-gray-700 mt-4">Ubicación:</label>
+      <input type="text" id="ubicacion" autocomplete="off" placeholder="Ej. A3B2"
+        class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-4 focus:ring-pink-500 focus:border-pink-600 outline-none"
+        onkeydown="detectarEnter(event, 'cantidad')" list="ubicacionLista">
+      <datalist id="ubicacionLista"></datalist>
 
-    <!-- Escaneo por piezas -->
-    <div class="mt-4">
-      <label class="inline-flex items-center">
-        <input type="checkbox" id="escaneoPorPiezas"
-               class="form-checkbox h-5 w-5 text-pink-600" onclick="toggleCantidad()">
-        <span class="ml-2 text-sm text-gray-700">Escanear por piezas</span>
-      </label>
-    </div>
+      <!-- Campo Cantidad -->
+      <label class="block text-sm font-medium text-gray-700 mt-4">Cantidad:</label>
+      <input type="number" id="cantidad" value="1" min="1"
+        class="w-full p-2 border-2 border-gray-300 rounded-lg focus:ring-4 focus:ring-pink-500 focus:border-pink-600 outline-none"
+        onkeydown="detectarEnter(event, 'sku')">
 
-    <!-- Botones -->
-    <button id="btnRegistrar" onclick="gatilloRegistrar()"
-            class="w-full mt-6 bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-full shadow-md hover:shadow-lg flex items-center justify-center space-x-2 transition-all">
-      <span class="text-xl">📦</span>
-      <span>Registrar SKU</span>
-    </button>
-    <button id="btnExportar" onclick="gatilloExportar()"
-            class="w-full mt-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-full shadow-md hover:shadow-lg flex items-center justify-center space-x-2 transition-all">
-      <span class="text-xl">📄</span>
-      <span>Exportar CSV</span>
-    </button>
+      <!-- Escaneo por piezas -->
+      <div class="mt-4">
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="escaneoPorPiezas"
+            class="form-checkbox h-5 w-5 text-pink-600" onclick="toggleCantidad()">
+          <span class="ml-2 text-sm text-gray-700">Escanear por piezas</span>
+        </label>
+      </div>
 
-    <!-- Historial -->
-    <div id="historial" class="mt-4 max-h-40 overflow-y-auto hidden">
-      <h4 class="text-md font-bold text-gray-800">Historial de Registros</h4>
-      <table class="w-full mt-2 text-sm border border-gray-300">
-        <thead>
-          <tr class="bg-gray-100">
-            <th class="border px-2 py-2 text-left">SKU</th>
-            <th class="border px-2 py-2 text-left">Ubicación</th>
-            <th class="border px-2 py-2 text-left">Cantidad</th>
-            <th class="border px-2 py-2 text-left">Acción</th>
-          </tr>
-        </thead>
-        <tbody id="historialBody"></tbody>
-      </table>
+      <!-- Botones -->
+      <button id="btnRegistrar" onclick="gatilloRegistrar()"
+        class="w-full mt-6 bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-full shadow-md hover:shadow-lg flex items-center justify-center space-x-2 transition-all">
+        <span class="text-xl">📦</span>
+        <span>Registrar SKU</span>
+      </button>
+      <button id="btnExportar" onclick="gatilloExportar()"
+        class="w-full mt-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-full shadow-md hover:shadow-lg flex items-center justify-center space-x-2 transition-all">
+        <span class="text-xl">📄</span>
+        <span>Exportar CSV</span>
+      </button>
+
+      <!-- Historial -->
+      <div id="historial" class="mt-4 max-h-40 overflow-y-auto hidden">
+        <h4 class="text-md font-bold text-gray-800">Historial de Registros</h4>
+        <table class="w-full mt-2 text-sm border border-gray-300">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="border px-2 py-2 text-left">SKU</th>
+              <th class="border px-2 py-2 text-left">Ubicación</th>
+              <th class="border px-2 py-2 text-left">Cantidad</th>
+              <th class="border px-2 py-2 text-left">Acción</th>
+            </tr>
+          </thead>
+          <tbody id="historialBody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -118,7 +131,6 @@
 
       if (document.getElementById("escaneoPorPiezas").checked) cantidad = 1;
 
-      // Validaciones
       if (!/^[0-9]+$/.test(sku)) {
         Swal.fire("Error", "El SKU debe ser solo números.", "error");
         return;
@@ -132,14 +144,10 @@
         return;
       }
 
-      // Llamada a Google Apps Script
       google.script.run.registrarEntrada(sku, ubicacion, cantidad);
-
-      // Guardar en historial
       historialRegistros.push({ sku, ubicacion, cantidad });
       actualizarHistorial();
 
-      // Reinicio de campos
       setTimeout(() => {
         document.getElementById("sku").value = "";
         document.getElementById("ubicacion").value = "";
@@ -157,8 +165,8 @@
           <td class="border px-2 py-1">${registro.ubicacion}</td>
           <td class="border px-2 py-1">
             <input type="number" value="${registro.cantidad}" min="1"
-                   onchange="actualizarCantidad(${index}, this.value)"
-                   class="w-full p-1 text-center border-2 border-gray-300 rounded-lg">
+              onchange="actualizarCantidad(${index}, this.value)"
+              class="w-full p-1 text-center border-2 border-gray-300 rounded-lg">
           </td>
           <td class="border px-2 py-1">
             <button onclick="eliminarFila(${index})" class="text-red-500 hover:text-red-700">Eliminar</button>
@@ -197,12 +205,7 @@
       const btn = document.getElementById("btnRegistrar");
       btn.classList.add("animate-pulse");
       simularBeep();
-
-      // Vibración (solo en dispositivos compatibles)
-      if (navigator.vibrate) {
-        navigator.vibrate(100); // Vibra por 100 ms
-      }
-
+      if (navigator.vibrate) navigator.vibrate(100);
       setTimeout(() => btn.classList.remove("animate-pulse"), 300);
       enviarEntrada();
     }
@@ -211,28 +214,30 @@
       const btn = document.getElementById("btnExportar");
       btn.classList.add("animate-pulse");
       simularBeep();
-
-      // Vibración
-      if (navigator.vibrate) {
-        navigator.vibrate(80); // Vibra por 80 ms
-      }
-
+      if (navigator.vibrate) navigator.vibrate(80);
       setTimeout(() => btn.classList.remove("animate-pulse"), 300);
       exportarHistorial();
     }
 
+    function irInicio() {
+      if (window.parent !== window) {
+        parent.postMessage({ tipo: "mostrarInicio" }, "*");
+      } else {
+        window.location.href = "/";
+      }
+    }
+
     window.onload = () => {
       document.getElementById("sku").focus();
+      ajustarAltura();
     };
 
     function ajustarAltura() {
-    const altura = document.body.scrollHeight;
-    parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
-  }
+      const altura = document.body.scrollHeight;
+      parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
+    }
 
-    window.onload = ajustarAltura;
     window.onresize = ajustarAltura;
-
   </script>
 </body>
 </html>

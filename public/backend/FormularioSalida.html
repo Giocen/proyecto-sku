@@ -26,10 +26,15 @@
 </head>
 <body class="bg-gradient-to-r from-pink-100 to-purple-200 min-h-screen flex items-center justify-center">
 
-  <!-- Agregar el sonido de beep -->
-  <audio id="beep-sound" src="beep-sound.mp3" preload="auto"></audio>
+  <!-- Menú Superior -->
+  <nav class="w-full bg-pink-600 p-4 text-white">
+    <div class="flex justify-between items-center">
+      <a href="index.html" class="text-xl font-semibold">Regresar al Inicio</a>
+    </div>
+  </nav>
 
-  <div class="bg-white shadow-2xl rounded-2xl p-6 w-full max-w-md">
+  <!-- Contenido Principal -->
+  <div class="bg-white shadow-2xl rounded-2xl p-6 w-full max-w-md mt-8">
     <div class="flex items-center justify-center mb-6">
       <img src="https://i.imgur.com/n66e0SR.png" alt="Logo Liverpool" class="h-10 mr-2">
       <h3 class="text-2xl font-extrabold text-pink-800 text-center">Salida SKU</h3>
@@ -63,10 +68,10 @@
       📷 Escanear código de barras
     </button>
 
-  <div id="scanner-container" class="hidden rounded-lg overflow-hidden transition-all duration-300">
+    <div id="scanner-container" class="hidden rounded-lg overflow-hidden transition-all duration-300">
       <div id="qr-reader" style="width: 100%;"></div>
     </div>
-
+  </div>
 
   <script>
     let html5QrCode;
@@ -224,12 +229,12 @@
     }
 
     function ajustarAltura() {
-    const altura = document.body.scrollHeight;
-    parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
-  }
+      const altura = document.body.scrollHeight;
+      parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
+    }
 
-  window.onload = ajustarAltura;
-  window.onresize = ajustarAltura;
+    window.onload = ajustarAltura;
+    window.onresize = ajustarAltura;
   </script>
 </body>
 </html>

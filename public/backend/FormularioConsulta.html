@@ -16,9 +16,66 @@
       border: 4px solid #f87171; /* Color rojo en caso de error */
       transition: border 0.3s ease;
     }
+
+    /* Estilos para el menú */
+    .menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      background-color: #f3f4f6;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    .menu-open {
+      transform: translateX(0);
+    }
+    .menu ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+    .menu ul li {
+      margin: 10px 0;
+    }
+    .menu ul li a {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+    }
+    .menu-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #f3f4f6;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 50%;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800 p-4">
+
+  <!-- Menú lateral -->
+  <div id="menu" class="menu">
+    <ul>
+      <li><a href="#">Inicio</a></li>
+      <li><a href="#">Consulta SKU</a></li>
+      <li><a href="#">Reportes</a></li>
+      <li><a href="#">Ajustes</a></li>
+    </ul>
+  </div>
+
+  <!-- Botón para abrir/cerrar el menú -->
+  <button onclick="toggleMenu()" class="menu-button">
+    ☰
+  </button>
+
   <div class="max-w-md mx-auto bg-white shadow-xl rounded-2xl p-6 space-y-4 border border-pink-300">
     <img src="https://i.imgur.com/n66e0SR.png"
          alt="Liverpool Logo"
@@ -211,6 +268,12 @@
       }
     }
 
+    // Función para abrir/cerrar el menú lateral
+    function toggleMenu() {
+      const menu = document.getElementById("menu");
+      menu.classList.toggle("menu-open");
+    }
+
     window.onload = function () {
       const inputSku = document.getElementById("sku");
       inputSku.focus();
@@ -223,13 +286,6 @@
       });
     };
 
-    function ajustarAltura() {
-    const altura = document.body.scrollHeight;
-    parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
-  }
-
-  window.onload = ajustarAltura;
-  window.onresize = ajustarAltura;
   </script>
 </body>
 </html>
