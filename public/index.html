@@ -84,6 +84,8 @@
       box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
       transition: height 0.3s ease, opacity 0.3s ease;
       animation: fadeIn 0.4s ease;
+      min-height: 300px;
+      opacity: 0;
     }
 
     .footer {
@@ -111,18 +113,6 @@
       background-color: #004f3a;
     }
 
-    .iframe-entrada {
-      height: 800px;
-    }
-
-    .iframe-salida {
-      height: 600px;
-    }
-
-    .iframe-consulta {
-      height: 500px;
-    }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.98); }
       to { opacity: 1; transform: scale(1); }
@@ -137,12 +127,6 @@
         width: 100%;
         text-align: center;
         justify-content: center;
-      }
-
-      .iframe-entrada,
-      .iframe-salida,
-      .iframe-consulta {
-        height: 85vh;
       }
     }
   </style>
@@ -165,7 +149,7 @@
       </button>
     </div>
 
-    <iframe id="formularioFrame" class="iframe-container" src=""></iframe>
+    <iframe id="formularioFrame" class="iframe-container" src="" scrolling="no"></iframe>
 
     <button class="inicio-button" onclick="limpiarIframe()">
       <i class="fas fa-home"></i> Inicio
@@ -186,16 +170,7 @@
       iframe.style.opacity = 0;
       setTimeout(() => {
         iframe.src = urls[tipo];
-        iframe.classList.remove('iframe-entrada', 'iframe-salida', 'iframe-consulta');
-
-        if (tipo === 'entrada') {
-          iframe.classList.add('iframe-entrada');
-        } else if (tipo === 'salida') {
-          iframe.classList.add('iframe-salida');
-        } else if (tipo === 'consulta') {
-          iframe.classList.add('iframe-consulta');
-        }
-
+        iframe.style.height = "400px"; // Altura provisional mientras carga
         iframe.style.opacity = 1;
       }, 200);
     }
@@ -203,8 +178,17 @@
     function limpiarIframe() {
       const iframe = document.getElementById('formularioFrame');
       iframe.src = "";
-      iframe.classList.remove('iframe-entrada', 'iframe-salida', 'iframe-consulta');
+      iframe.style.height = "0px";
     }
+
+    // Ajuste dinámico del iframe según su contenido
+    window.addEventListener("message", function(event) {
+      if (event.data && event.data.tipo === "resize-iframe") {
+        const altura = event.data.altura;
+        const iframe = document.getElementById('formularioFrame');
+        iframe.style.height = altura + "px";
+      }
+    }, false);
   </script>
 
 </body>
