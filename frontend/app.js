@@ -8,7 +8,7 @@ document.getElementById('sku-form').addEventListener('submit', async (e) => {
   
   try {
     // Realizar la solicitud POST
-    const res = await fetch('https://script.google.com/a/macros/liverpool.com.mx/s/AKfycbzsWQqvmoirPuX8jam5j-OrDF1tp0IrH3wtti_7M2od2Q-lQiknteY3u02fgTfUPo26dA/exec', {
+    const res = await fetch('https://script.google.com/a/macros/liverpool.com.mx/s/AKfycbywrGvepraUGXGxglfXX-sCxQZO7VGhI2Rq3AqDC8UhACXQvrGPsbTABsUjBfUZZPMuEw/exec', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' }
