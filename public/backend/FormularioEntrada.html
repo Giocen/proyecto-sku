@@ -7,13 +7,17 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
+    /* Eliminar flechas en Chrome, Safari, Edge */
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
     }
+  
+    /* Eliminar flechas en Firefox */
     input[type="number"] {
       -moz-appearance: textfield;
+      appearance: textfield; /* estándar para otros navegadores */
     }
   </style>
   <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
