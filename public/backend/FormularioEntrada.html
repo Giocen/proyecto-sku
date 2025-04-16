@@ -114,43 +114,48 @@
       cantidadInput.disabled = check;
       if (check) cantidadInput.value = 1;
     }
-
     function enviarEntrada() {
-      let sku = document.getElementById("sku").value.trim();
-      let ubicacion = document.getElementById("ubicacion").value.trim();
-      let cantidad = document.getElementById("cantidad").value.trim();
+    let sku = document.getElementById("sku").value.trim();
+    let ubicacion = document.getElementById("ubicacion").value.trim();
+    let cantidad = document.getElementById("cantidad").value.trim();
 
-      if (document.getElementById("escaneoPorPiezas").checked) cantidad = 1;
+    if (document.getElementById("escaneoPorPiezas").checked) cantidad = 1;
 
-      // Validaciones
-      if (!/^[0-9]+$/.test(sku)) {
-        Swal.fire("Error", "El SKU debe ser solo números.", "error");
-        return;
-      }
-      if (!/^[a-zA-Z0-9]+$/.test(ubicacion)) {
-        Swal.fire("Error", "La ubicación debe ser alfanumérica.", "error");
-        return;
-      }
-      if (!/^[1-9][0-9]*$/.test(cantidad)) {
-        Swal.fire("Error", "Digite la cantidad (número mayor a 0).", "error");
-        return;
-      }
-
-      // Llamada a Google Apps Script
-      google.script.run.registrarEntrada(sku, ubicacion, cantidad);
-
-      // Guardar en historial
-      historialRegistros.push({ sku, ubicacion, cantidad });
-      actualizarHistorial();
-
-      // Reinicio de campos
-      setTimeout(() => {
-        document.getElementById("sku").value = "";
-        document.getElementById("ubicacion").value = "";
-        document.getElementById("cantidad").value = 1;
-        document.getElementById("sku").focus();
-      }, 400);
+    // Validaciones
+    if (!/^[0-9]+$/.test(sku)) {
+      Swal.fire("Error", "El SKU debe ser solo números.", "error");
+      return;
     }
+    if (!/^[a-zA-Z0-9]+$/.test(ubicacion)) {
+      Swal.fire("Error", "La ubicación debe ser alfanumérica.", "error");
+      return;
+    }
+    if (!/^[1-9][0-9]*$/.test(cantidad)) {
+      Swal.fire("Error", "Digite la cantidad (número mayor a 0).", "error");
+      return;
+    }
+
+    // Llamada a Google Apps Script para registrar los datos
+    google.script.run.withSuccessHandler(function(response) {
+      if (response.success) {
+        Swal.fire("Éxito", "Registro de SKU realizado correctamente.", "success");
+
+        // Guardar en historial
+        historialRegistros.push({ sku, ubicacion, cantidad });
+        actualizarHistorial();
+
+        // Reinicio de campos
+        setTimeout(() => {
+          document.getElementById("sku").value = "";
+          document.getElementById("ubicacion").value = "";
+          document.getElementById("cantidad").value = 1;
+          document.getElementById("sku").focus();
+        }, 400);
+      } else {
+        Swal.fire("Error", response.message || "Hubo un problema al registrar el SKU.", "error");
+      }
+    }).registrarEntrada(sku, ubicacion, cantidad); // Llamada a la función de Google Apps Script
+  }
 
     function actualizarHistorial() {
       const historialBody = document.getElementById("historialBody");
