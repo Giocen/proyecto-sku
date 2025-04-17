@@ -41,27 +41,28 @@
       </div>
     </aside>
 
-    <main class="flex-1 ml-0 lg:ml-64 flex flex-col items-center justify-center relative w-full h-full">
+    <main class="flex-1 ml-0 lg:ml-64 flex items-center justify-center relative w-full h-full">
       <iframe id="formularioFrame" class="w-full h-full hidden border-none transition duration-300 ease-in-out" src=""></iframe>
-      
-      <div id="inicioTexto" class="text-center text-gray-500 flex flex-col items-center">
+    
+      <div id="inicioTexto" class="text-center text-gray-500 flex flex-col items-center justify-center">
+        <!-- Logo de escaneo más grande -->
         <img 
-        src="https://i.imgur.com/3evOM8m.png" 
-        alt="Logo Escaneo" 
-        class="w-30 h-28 mb-6 transition duration-300 ease-in-out"
-      />
-
+          src="https://i.imgur.com/3evOM8m.png" 
+          alt="Logo Escaneo" 
+          class="w-36 h-32 mb-2 transition duration-300 ease-in-out"
+        />
+    
+        <!-- Logo RYC centrado debajo -->
         <img 
-        
           src="https://i.imgur.com/G5H8ePs.jpg" 
           alt="Logo RYC" 
-          class="w-25 h-20 mb-6 rounded-2xl shadow-lg transition duration-300 ease-in-out"
+          class="w-40 h-28 mb-6 transition duration-300 ease-in-out"
         />
+    
         <h1 class="text-3xl font-semibold mb-4">Bienvenido a RYC Sku</h1>
         <p>Selecciona una opción del menú para comenzar.</p>
       </div>
     </main>
-
   <script>
     // Toggle del menú lateral en móvil
     document.getElementById("menuBtn").addEventListener("click", () => {
