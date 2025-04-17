@@ -4,7 +4,6 @@ function onOpen() {
     .addItem("Abrir formulario de entrada", "mostrarFormularioEntrada")
     .addItem("Abrir formulario de salida", "mostrarFormularioSalida")
     .addItem("Abrir consulta de SKU", "mostrarFormularioConsulta")
-    .addItem("Abrir menú principal", "mostrarMenuPrincipal")
     .addItem("Transferir datos OH", "transferirDatosOH")
     .addToUi();
 }
@@ -29,13 +28,6 @@ function mostrarFormularioConsulta() {
   mostrarFormulario("FormularioConsulta", "Liverpool Mérida", 300, 300);
 }
 
-function mostrarMenuPrincipal() {
-  var html = HtmlService.createHtmlOutput(HtmlService.createHtmlOutputFromFile("Menu").getContent())
-    .setWidth(300)
-    .setHeight(400);
-
-  SpreadsheetApp.getUi().showModalDialog(html, "Gestión de SKU");
-}
 
 function registrarMovimiento(tipo, sku, ubicacion, cantidad) {
   var hojaNombre = tipo === "entrada" ? "Entrada Sku" : "Salida Sku";
