@@ -89,7 +89,9 @@
 
   <script>
     const historialRegistros = [];
-    const urlScript = "https://script.google.com/a/macros/liverpool.com.mx/s/AKfycbx1LQajUVXwClH4q-ez4ZzevPlJ9RrhCO_K5F-RciHAwEvi4EKQYClSU4-pIW4Lh6e8/exec"
+    const urlScript = "https://script.google.com/a/macros/liverpool.com.mx/s/AKfycbx1LQajUVXwClH4q-ez4ZzevPlJ9RrhCO_K5F-RciHAwEvi4EKQYClSU4-pIW4Lh6e8/exec"; // URL del Google Apps Script
+
+    function simularBeep() {
       const beep = document.getElementById("beep-sound");
       beep.currentTime = 0;
       beep.play();
