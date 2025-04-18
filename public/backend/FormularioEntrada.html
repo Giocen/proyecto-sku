@@ -117,82 +117,74 @@
     }
 
     async function registrarEntrada() {
-      const sku = document.getElementById("sku").value;
-      const ubicacion = document.getElementById("ubicacion").value;
-      let cantidad = document.getElementById("cantidad").value;
+  const sku = document.getElementById("sku").value;
+  const ubicacion = document.getElementById("ubicacion").value;
+  let cantidad = document.getElementById("cantidad").value;
 
-      // Validaciones
-      if (!/^[0-9]+$/.test(sku)) {
-        Swal.fire("Error", "El SKU debe ser solo números.", "error");
-        return;
-      }
-      if (!/^[a-zA-Z0-9]+$/.test(ubicacion)) {
-        Swal.fire("Error", "La ubicación debe ser alfanumérica.", "error");
-        return;
-      }
-      if (!/^[1-9][0-9]*$/.test(cantidad)) {
-        Swal.fire("Error", "Digite la cantidad (número mayor a 0).", "error");
-        return;
-      }
+  // Validaciones
+  if (!/^[0-9]+$/.test(sku)) {
+    Swal.fire("Error", "El SKU debe ser solo números.", "error");
+    return;
+  }
+  if (!/^[a-zA-Z0-9]+$/.test(ubicacion)) {
+    Swal.fire("Error", "La ubicación debe ser alfanumérica.", "error");
+    return;
+  }
+  if (!/^[1-9][0-9]*$/.test(cantidad)) {
+    Swal.fire("Error", "Digite la cantidad (número mayor a 0).", "error");
+    return;
+  }
 
-      if (document.getElementById("escaneoPorPiezas").checked) cantidad = 1;
+  if (document.getElementById("escaneoPorPiezas").checked) cantidad = 1;
 
-      const datos = {
-        tipo: "entrada",
-        sku: sku,
-        ubicacion: ubicacion,
-        cantidad: cantidad
-      };
+  const datos = {
+    tipo: "entrada",
+    sku: sku,
+    ubicacion: ubicacion,
+    cantidad: cantidad
+  };
 
-      try {
-        const response = await fetch(urlScript, {
-          method: "POST",
-          mode: "no-cors", 
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(datos)
-        });
+  try {
+    const response = await fetch(urlScript, {
+      method: "POST",
+      mode: "no-cors", 
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(datos)
+    });
 
-        // Vibración y sonido
-        if (navigator.vibrate) {
-          navigator.vibrate(200); // Vibración por 200ms
-        }
-
-        const beep = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg'); 
-        beep.play();
-
-        // Limpiar campos
-        document.getElementById("sku").value = '';
-        document.getElementById("ubicacion").value = '';
-        document.getElementById("cantidad").value = 1;
-        document.getElementById("sku").focus();
-
-        // Mostrar mensaje de éxito
-        Swal.fire({
-          icon: 'success',
-          title: 'Registro Exitoso',
-          text: 'Los datos han sido enviados correctamente.',
-        });
-
-        console.log("Datos enviados correctamente");
-
-        // Guardar en historial
-        historialRegistros.push({ sku, ubicacion, cantidad });
-        actualizarHistorial();
-
-      } catch (error) {
-        console.error("Error al enviar los datos:", error);
-
-        // Mostrar mensaje de error
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Hubo un problema al enviar los datos. Intenta nuevamente.',
-        });
-      }
+    // Vibración y sonido
+    if (navigator.vibrate) {
+      navigator.vibrate(200); // Vibración por 200ms
     }
 
+    const beep = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg'); 
+    beep.play();
+
+    // Limpiar campos
+    document.getElementById("sku").value = '';
+    document.getElementById("ubicacion").value = '';
+    document.getElementById("cantidad").value = 1;
+    document.getElementById("sku").focus();
+
+    console.log("Datos enviados correctamente");
+
+    // Guardar en historial
+    historialRegistros.push({ sku, ubicacion, cantidad });
+    actualizarHistorial();
+
+  } catch (error) {
+    console.error("Error al enviar los datos:", error);
+
+    // Mostrar mensaje de error
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Hubo un problema al enviar los datos. Intenta nuevamente.',
+    });
+  }
+}
     function actualizarHistorial() {
       const historialBody = document.getElementById("historialBody");
       historialBody.innerHTML = "";
