@@ -89,6 +89,7 @@
 
   <script>
     const historialRegistros = [];
+    const urlScript = "https://script.google.com/macros/s/AKfycbyourScriptID/exec"; // URL del Google Apps Script
 
     function simularBeep() {
       const beep = document.getElementById("beep-sound");
@@ -114,48 +115,83 @@
       cantidadInput.disabled = check;
       if (check) cantidadInput.value = 1;
     }
-    function enviarEntrada() {
-    let sku = document.getElementById("sku").value.trim();
-    let ubicacion = document.getElementById("ubicacion").value.trim();
-    let cantidad = document.getElementById("cantidad").value.trim();
 
-    if (document.getElementById("escaneoPorPiezas").checked) cantidad = 1;
+    async function registrarEntrada() {
+      const sku = document.getElementById("sku").value;
+      const ubicacion = document.getElementById("ubicacion").value;
+      let cantidad = document.getElementById("cantidad").value;
 
-    // Validaciones
-    if (!/^[0-9]+$/.test(sku)) {
-      Swal.fire("Error", "El SKU debe ser solo números.", "error");
-      return;
-    }
-    if (!/^[a-zA-Z0-9]+$/.test(ubicacion)) {
-      Swal.fire("Error", "La ubicación debe ser alfanumérica.", "error");
-      return;
-    }
-    if (!/^[1-9][0-9]*$/.test(cantidad)) {
-      Swal.fire("Error", "Digite la cantidad (número mayor a 0).", "error");
-      return;
-    }
+      // Validaciones
+      if (!/^[0-9]+$/.test(sku)) {
+        Swal.fire("Error", "El SKU debe ser solo números.", "error");
+        return;
+      }
+      if (!/^[a-zA-Z0-9]+$/.test(ubicacion)) {
+        Swal.fire("Error", "La ubicación debe ser alfanumérica.", "error");
+        return;
+      }
+      if (!/^[1-9][0-9]*$/.test(cantidad)) {
+        Swal.fire("Error", "Digite la cantidad (número mayor a 0).", "error");
+        return;
+      }
 
-    // Llamada a Google Apps Script para registrar los datos
-    google.script.run.withSuccessHandler(function(response) {
-      if (response.success) {
-        Swal.fire("Éxito", "Registro de SKU realizado correctamente.", "success");
+      if (document.getElementById("escaneoPorPiezas").checked) cantidad = 1;
+
+      const datos = {
+        tipo: "entrada",
+        sku: sku,
+        ubicacion: ubicacion,
+        cantidad: cantidad
+      };
+
+      try {
+        const response = await fetch(urlScript, {
+          method: "POST",
+          mode: "no-cors", 
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(datos)
+        });
+
+        // Vibración y sonido
+        if (navigator.vibrate) {
+          navigator.vibrate(200); // Vibración por 200ms
+        }
+
+        const beep = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg'); 
+        beep.play();
+
+        // Limpiar campos
+        document.getElementById("sku").value = '';
+        document.getElementById("ubicacion").value = '';
+        document.getElementById("cantidad").value = 1;
+        document.getElementById("sku").focus();
+
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          icon: 'success',
+          title: 'Registro Exitoso',
+          text: 'Los datos han sido enviados correctamente.',
+        });
+
+        console.log("Datos enviados correctamente");
 
         // Guardar en historial
         historialRegistros.push({ sku, ubicacion, cantidad });
         actualizarHistorial();
 
-        // Reinicio de campos
-        setTimeout(() => {
-          document.getElementById("sku").value = "";
-          document.getElementById("ubicacion").value = "";
-          document.getElementById("cantidad").value = 1;
-          document.getElementById("sku").focus();
-        }, 400);
-      } else {
-        Swal.fire("Error", response.message || "Hubo un problema al registrar el SKU.", "error");
+      } catch (error) {
+        console.error("Error al enviar los datos:", error);
+
+        // Mostrar mensaje de error
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al enviar los datos. Intenta nuevamente.',
+        });
       }
-    }).registrarEntrada(sku, ubicacion, cantidad); // Llamada a la función de Google Apps Script
-  }
+    }
 
     function actualizarHistorial() {
       const historialBody = document.getElementById("historialBody");
@@ -187,61 +223,14 @@
       actualizarHistorial();
     }
 
-    function exportarHistorial() {
-      if (historialRegistros.length === 0) {
-        Swal.fire("Error", "No hay registros para exportar.", "error");
-        return;
-      }
-      const csvContent = "SKU,Ubicación,Cantidad\n" +
-        historialRegistros.map(r => `${r.sku},${r.ubicacion},${r.cantidad}`).join("\n");
-
-      const blob = new Blob([csvContent], { type: "text/csv" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "historial_registros.csv";
-      link.click();
-    }
-
     function gatilloRegistrar() {
       const btn = document.getElementById("btnRegistrar");
-      btn.classList.add("animate-pulse");
-      simularBeep();
-
-      // Vibración (solo en dispositivos compatibles)
-      if (navigator.vibrate) {
-        navigator.vibrate(100); // Vibra por 100 ms
-      }
-
-      setTimeout(() => btn.classList.remove("animate-pulse"), 300);
-      enviarEntrada();
+      btn.classList.add("opacity-50");
+      registrarEntrada();
+      setTimeout(() => {
+        btn.classList.remove("opacity-50");
+      }, 1000);
     }
-
-    function gatilloExportar() {
-      const btn = document.getElementById("btnExportar");
-      btn.classList.add("animate-pulse");
-      simularBeep();
-
-      // Vibración
-      if (navigator.vibrate) {
-        navigator.vibrate(80); // Vibra por 80 ms
-      }
-
-      setTimeout(() => btn.classList.remove("animate-pulse"), 300);
-      exportarHistorial();
-    }
-
-    window.onload = () => {
-      document.getElementById("sku").focus();
-    };
-
-    function ajustarAltura() {
-    const altura = document.body.scrollHeight;
-    parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
-  }
-
-    window.onload = ajustarAltura;
-  window.onresize = ajustarAltura;
-
   </script>
 </body>
 </html>
