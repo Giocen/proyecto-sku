@@ -1,16 +1,13 @@
 {
-  "scriptId": "1A_ZgSRRp1DI61Max5odP6lB4z-b9slv96ET_VI1BIRVTa5DRLEJ7Sd3C",
-  "rootDir": "",
-  "scriptExtensions": [
-    ".js",
-    ".gs"
-  ],
-  "htmlExtensions": [
-    ".html"
-  ],
-  "jsonExtensions": [
-    ".json"
-  ],
-  "filePushOrder": [],
-  "skipSubdirectories": false
+  "timeZone": "America/Mexico_City",
+  "dependencies": {},
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/script.external_request",
+    "https://www.googleapis.com/auth/script.scriptapp",
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/script.container.ui"
+  ]
 }
